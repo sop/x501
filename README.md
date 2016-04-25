@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sop/x501.svg?branch=master)](https://travis-ci.org/sop/x501)
+
 # X.501
 A PHP library for X.501 ASN.1 modules, X.520 attributes and DN parsing.
 
