@@ -5,7 +5,10 @@ namespace X501\ASN1\AttributeValue;
 use ASN1\Element;
 
 
-class UnknownAttribute extends AttributeValue
+/**
+ * Class hold ASN.1 structure of an unimplemented attribute value.
+ */
+class UnknownAttributeValue extends AttributeValue
 {
 	/**
 	 * ASN.1 element.
@@ -25,11 +28,22 @@ class UnknownAttribute extends AttributeValue
 		$this->_element = $el;
 	}
 	
+	/**
+	 *
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::toASN1()
+	 * @return Element
+	 */
 	public function toASN1() {
 		return $this->_element;
 	}
 	
+	/**
+	 *
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::rfc2253String()
+	 * @return string
+	 */
 	public function rfc2253String() {
+		// return DER encoding as a hexstring
 		return "#" . bin2hex($this->_element->toDER());
 	}
 }

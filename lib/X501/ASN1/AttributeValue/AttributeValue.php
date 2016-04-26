@@ -64,7 +64,7 @@ abstract class AttributeValue
 	 */
 	public static function fromASN1ByOID($oid, Element $el) {
 		if (!isset(self::$_oidToCls[$oid])) {
-			return new UnknownAttribute($oid, $el);
+			return new UnknownAttributeValue($oid, $el);
 		}
 		$cls = self::$_oidToCls[$oid];
 		return $cls::fromASN1($el);
