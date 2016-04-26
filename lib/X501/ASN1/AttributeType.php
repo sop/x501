@@ -28,7 +28,7 @@ class AttributeType
 	const OID_STATE_OR_PROVINCE_NAME = "2.5.4.8";
 	const OID_STREET_ADDRESS = "2.5.4.9";
 	const OID_ORGANIZATION_NAME = "2.5.4.10";
-	const OID_ORGANIZATION_UNIT_NAME = "2.5.4.11";
+	const OID_ORGANIZATIONAL_UNIT_NAME = "2.5.4.11";
 	const OID_TITLE = "2.5.4.12";
 	const OID_DESCRIPTION = "2.5.4.13";
 	const OID_SEARCH_GUIDE = "2.5.4.14";
