@@ -3,7 +3,7 @@
 namespace X501\ASN1\AttributeValue;
 
 use X501\ASN1\AttributeType;
-use X501\ASN1\AttributeValue\Syntax\DirectoryString;
+use X501\ASN1\AttributeValue\Feature\DirectoryString;
 
 
 class CommonNameValue extends DirectoryString

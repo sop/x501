@@ -43,6 +43,15 @@ class UnknownAttributeValue extends AttributeValue
 	 * @return string
 	 */
 	public function rfc2253String() {
+		return $this->_transcodedString();
+	}
+	
+	/**
+	 *
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::_transcodedString()
+	 * @return string
+	 */
+	protected function _transcodedString() {
 		// return DER encoding as a hexstring
 		return "#" . bin2hex($this->_element->toDER());
 	}

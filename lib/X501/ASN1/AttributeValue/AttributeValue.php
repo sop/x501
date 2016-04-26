@@ -16,8 +16,15 @@ use X501\ASN1\AttributeTypeAndValue;
  */
 abstract class AttributeValue
 {
+	/**
+	 * Mapping from attribute type OID to attribute value class name.
+	 *
+	 * @var array
+	 */
 	private static $_oidToCls = array(
 		/* @formatter:off */
+		AttributeType::OID_COMMON_NAME => CommonNameValue::class,
+		AttributeType::OID_COUNTRY_NAME => CountryNameValue::class,
 		AttributeType::OID_NAME => NameValue::class,
 		/* @formatter:on */
 	);
@@ -43,6 +50,14 @@ abstract class AttributeValue
 	 * @return string
 	 */
 	abstract public function rfc2253String();
+	
+	/**
+	 * Get attribute value as an UTF-8 string conforming to RFC 4518.
+	 *
+	 * @link https://tools.ietf.org/html/rfc4518#section-2.1
+	 * @return string
+	 */
+	abstract protected function _transcodedString();
 	
 	/**
 	 * Initialize from ASN.1.
@@ -87,8 +102,37 @@ abstract class AttributeValue
 	 * @return string
 	 */
 	public function rfc4518String() {
-		// override in derived classes when applicable
-		return $this->rfc2253String();
+		// step 1: Transcode
+		$value = $this->_transcodedString();
+		// step 2: Map (NOT IMPLEMENTED)
+		// step 3: Normalize
+		$value = normalizer_normalize($value, \Normalizer::NFKD);
+		// step 4: Prohibit (NOT IMPLEMENTED)
+		// step 5: Check bidi (NOT IMPLEMENTED)
+		// step 6: Insignificant Character Handling
+		// @todo: consider attribute type
+		$value = self::_applyInsignificantSpaceHandling($value);
+		return $value;
+	}
+	
+	/**
+	 * Apply insignificant space handling conforming to RFC 4518.
+	 *
+	 * @link https://tools.ietf.org/html/rfc4518#section-2.6
+	 * @param string $str
+	 * @return string
+	 */
+	private static function _applyInsignificantSpaceHandling($str) {
+		// if value contains no non-space characters
+		if (preg_match('/^\p{Zs}*$/u', $str)) {
+			return "  ";
+		}
+		// trim leading and trailing spaces
+		$str = preg_replace('/^\p{Zs}+/u', '', $str);
+		$str = preg_replace('/\p{Zs}+$/u', '', $str);
+		// convert inner space sequences to two U+0020 characters
+		$str = preg_replace('/\p{Zs}+/u', "  ", $str);
+		return " $str ";
 	}
 	
 	/**

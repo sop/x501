@@ -1,6 +1,6 @@
 <?php
 
-namespace X501\ASN1\AttributeValue\Syntax;
+namespace X501\ASN1\AttributeValue\Feature;
 
 use ASN1\Element;
 use ASN1\Type\Primitive\BMPString;
@@ -9,6 +9,7 @@ use ASN1\Type\Primitive\T61String;
 use ASN1\Type\Primitive\UniversalString;
 use ASN1\Type\Primitive\UTF8String;
 use X501\ASN1\AttributeValue\AttributeValue;
+use X501\DN\DNParser;
 
 
 /**
@@ -78,11 +79,11 @@ abstract class DirectoryString extends AttributeValue
 	protected $_stringTag;
 	
 	/**
-	 * String value
+	 * String value.
 	 *
-	 * @var string $_value
+	 * @var string $_string
 	 */
-	protected $_value;
+	protected $_string;
 	
 	/**
 	 * Constructor
@@ -91,7 +92,7 @@ abstract class DirectoryString extends AttributeValue
 	 * @param int $string_tag Syntax choice
 	 */
 	public function __construct($value, $string_tag) {
-		$this->_value = $value;
+		$this->_string = $value;
 		$this->_stringTag = $string_tag;
 	}
 	
@@ -124,7 +125,7 @@ abstract class DirectoryString extends AttributeValue
 					 " is not valid DirectoryString");
 		}
 		$cls = self::$_tagToCls[$this->_stringTag];
-		return new $cls($this->_value);
+		return new $cls($this->_string);
 	}
 	
 	/**
@@ -133,51 +134,30 @@ abstract class DirectoryString extends AttributeValue
 	 * @return string
 	 */
 	public function rfc2253String() {
-		$value = $this->_transcoded();
 		// TeletexString is encoded as binary
-		if ($this->_stringTag !== self::TELETEX) {
-			$value = self::_escapeRfc2253Value($value);
+		if ($this->_stringTag == self::TELETEX) {
+			return $this->_transcodedString();
 		}
-		return $value;
+		return DNParser::escapeString($this->_transcodedString());
 	}
 	
 	/**
 	 *
-	 * @see \X501\ASN1\AttributeValue\AttributeValue::rfc4518String()
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::_transcodedString()
 	 * @return string
 	 */
-	public function rfc4518String() {
-		// step 1: Transcode
-		$value = $this->_transcoded();
-		// step 2: Map (NOT IMPLEMENTED)
-		// step 3: Normalize
-		$value = normalizer_normalize($value, \Normalizer::NFKD);
-		// step 4: Prohibit (NOT IMPLEMENTED)
-		// step 5: Check bidi (NOT IMPLEMENTED)
-		// step 6: Insignificant Character Handling
-		// @todo: consider attribute type
-		$value = self::_applyInsignificantSpaceHandling($value);
-		return $value;
-	}
-	
-	/**
-	 * Transcode value to UTF-8.
-	 *
-	 * @link https://tools.ietf.org/html/rfc4518#section-2.1
-	 * @return string
-	 */
-	private function _transcoded() {
+	protected function _transcodedString() {
 		switch ($this->_stringTag) {
 		// UTF-8 string as is
 		case self::UTF8:
-			return $this->_value;
+			return $this->_string;
 		// PrintableString maps directly to UTF-8
 		case self::PRINTABLE:
-			return $this->_value;
+			return $this->_string;
 		case self::BMP:
-			return mb_convert_encoding($this->_value, "UTF-8", "UCS-2BE");
+			return mb_convert_encoding($this->_string, "UTF-8", "UCS-2BE");
 		case self::UNIVERSAL:
-			return mb_convert_encoding($this->_value, "UTF-8", "UCS-4BE");
+			return mb_convert_encoding($this->_string, "UTF-8", "UCS-4BE");
 		// TeletexString is such a hairy ball that we just 
 		// encode it as a "non string"
 		case self::TELETEX:
@@ -185,52 +165,5 @@ abstract class DirectoryString extends AttributeValue
 		default:
 			throw new \LogicException("Unsupported string type");
 		}
-	}
-	
-	/**
-	 * Escape value conforming to RFC 2253.
-	 *
-	 * @link https://tools.ietf.org/html/rfc2253#section-2.4
-	 * @param string $str
-	 * @return string
-	 */
-	private static function _escapeRfc2253Value($str) {
-		// one of the characters ",", "+", """, "\", "<", ">" or ";"
-		$str = preg_replace('/([,\+"\\\<\>;])/u', '\\\\$1', $str);
-		// a space character occurring at the end of the string
-		$str = preg_replace('/( )$/u', '\\\\$1', $str);
-		// a space or "#" character occurring at the beginning of the string
-		$str = preg_replace('/^([ #])/u', '\\\\$1', $str);
-		// implementation specific special characters
-		$str = preg_replace_callback('/([\pC])/u', 
-			function ($m) {
-				$octets = str_split(bin2hex($m[1]), 2);
-				return implode("", 
-					array_map(
-						function ($octet) {
-							return '\\' . strtoupper($octet);
-						}, $octets));
-			}, $str);
-		return $str;
-	}
-	
-	/**
-	 * Apply insignificant space handling conforming to RFC 4518.
-	 *
-	 * @link https://tools.ietf.org/html/rfc4518#section-2.6
-	 * @param string $str
-	 * @return string
-	 */
-	private static function _applyInsignificantSpaceHandling($str) {
-		// if value contains no non-space characters
-		if (preg_match('/^\p{Zs}*$/u', $str)) {
-			return "  ";
-		}
-		// trim leading and trailing spaces
-		$str = preg_replace('/^\p{Zs}+/u', '', $str);
-		$str = preg_replace('/\p{Zs}+$/u', '', $str);
-		// convert inner space sequences to two U+0020 characters
-		$str = preg_replace('/\p{Zs}+/u', "  ", $str);
-		return " $str ";
 	}
 }
