@@ -1,6 +1,6 @@
 {
 	"name": "sop/x501",
-	"description": "A PHP library for X.501 ASN.1 modules, X.520 attributes and DN parsing.",
+	"description": "A PHP library for X.501 ASN.1 types, X.520 attributes and DN parsing.",
 	"homepage": "https://github.com/sop/x501",
 	"license": "MIT",
 	"type": "library",
