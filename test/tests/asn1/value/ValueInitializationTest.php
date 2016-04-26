@@ -4,7 +4,17 @@ use X501\ASN1\AttributeType;
 use X501\ASN1\AttributeValue\AttributeValue;
 use X501\ASN1\AttributeValue\CommonNameValue;
 use X501\ASN1\AttributeValue\CountryNameValue;
+use X501\ASN1\AttributeValue\DescriptionValue;
+use X501\ASN1\AttributeValue\GivenNameValue;
+use X501\ASN1\AttributeValue\LocalityNameValue;
 use X501\ASN1\AttributeValue\NameValue;
+use X501\ASN1\AttributeValue\OrganizationalUnitNameValue;
+use X501\ASN1\AttributeValue\OrganizationNameValue;
+use X501\ASN1\AttributeValue\PseudonymValue;
+use X501\ASN1\AttributeValue\SerialNumberValue;
+use X501\ASN1\AttributeValue\StateOrProvinceNameValue;
+use X501\ASN1\AttributeValue\SurnameValue;
+use X501\ASN1\AttributeValue\TitleValue;
 
 
 /**
@@ -25,9 +35,19 @@ class ValueInitializationTest extends PHPUnit_Framework_TestCase
 	public function provider() {
 		return array(
 			/* @formatter:off */
-			[NameValue::class, AttributeType::OID_NAME],
+			[CommonNameValue::class, AttributeType::OID_COMMON_NAME],
+			[SurnameValue::class, AttributeType::OID_SURNAME],
+			[SerialNumberValue::class, AttributeType::OID_SERIAL_NUMBER],
 			[CountryNameValue::class, AttributeType::OID_COUNTRY_NAME],
-			[CommonNameValue::class, AttributeType::OID_COMMON_NAME]
+			[LocalityNameValue::class, AttributeType::OID_LOCALITY_NAME],
+			[StateOrProvinceNameValue::class, AttributeType::OID_STATE_OR_PROVINCE_NAME],
+			[OrganizationNameValue::class, AttributeType::OID_ORGANIZATION_NAME],
+			[OrganizationalUnitNameValue::class, AttributeType::OID_ORGANIZATIONAL_UNIT_NAME],
+			[TitleValue::class, AttributeType::OID_TITLE],
+			[DescriptionValue::class, AttributeType::OID_DESCRIPTION],
+			[NameValue::class, AttributeType::OID_NAME],
+			[GivenNameValue::class, AttributeType::OID_GIVEN_NAME],
+			[PseudonymValue::class, AttributeType::OID_PSEUDONYM],
 			/* @formatter:on */
 		);
 	}

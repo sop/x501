@@ -7,15 +7,15 @@ use X501\ASN1\AttributeValue\Feature\DirectoryString;
 
 
 /**
- * 'commonName' attribute value
+ * 'pseudonym' attribute value.
  *
  * @link
- *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2012/SelectedAttributeTypes.html#SelectedAttributeTypes.commonName
+ *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2012/SelectedAttributeTypes.html#SelectedAttributeTypes.pseudonym
  */
-class CommonNameValue extends DirectoryString
+class PseudonymValue extends DirectoryString
 {
 	public function __construct($value, $string_tag = DirectoryString::UTF8) {
-		$this->_oid = AttributeType::OID_COMMON_NAME;
+		$this->_oid = AttributeType::OID_PSEUDONYM;
 		parent::__construct($value, $string_tag);
 	}
 }

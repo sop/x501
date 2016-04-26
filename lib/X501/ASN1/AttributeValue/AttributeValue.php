@@ -24,8 +24,18 @@ abstract class AttributeValue
 	private static $_oidToCls = array(
 		/* @formatter:off */
 		AttributeType::OID_COMMON_NAME => CommonNameValue::class,
+		AttributeType::OID_SURNAME => SurnameValue::class,
+		AttributeType::OID_SERIAL_NUMBER => SerialNumberValue::class,
 		AttributeType::OID_COUNTRY_NAME => CountryNameValue::class,
+		AttributeType::OID_LOCALITY_NAME => LocalityNameValue::class,
+		AttributeType::OID_STATE_OR_PROVINCE_NAME => StateOrProvinceNameValue::class,
+		AttributeType::OID_ORGANIZATION_NAME => OrganizationNameValue::class,
+		AttributeType::OID_ORGANIZATIONAL_UNIT_NAME => OrganizationalUnitNameValue::class,
+		AttributeType::OID_TITLE => TitleValue::class,
+		AttributeType::OID_DESCRIPTION => DescriptionValue::class,
 		AttributeType::OID_NAME => NameValue::class,
+		AttributeType::OID_GIVEN_NAME => GivenNameValue::class,
+		AttributeType::OID_PSEUDONYM => PseudonymValue::class,
 		/* @formatter:on */
 	);
 	

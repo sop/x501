@@ -6,6 +6,12 @@ use X501\ASN1\AttributeType;
 use X501\ASN1\AttributeValue\Feature\PrintableStringValue;
 
 
+/**
+ * 'countryName' attribute value
+ *
+ * @link
+ *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2012/SelectedAttributeTypes.html#SelectedAttributeTypes.countryName
+ */
 class CountryNameValue extends AttributeValue
 {
 	use PrintableStringValue;
