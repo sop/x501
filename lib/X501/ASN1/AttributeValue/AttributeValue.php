@@ -96,12 +96,34 @@ abstract class AttributeValue
 	}
 	
 	/**
+	 * Initialize from another AttributeValue.
+	 *
+	 * This method is generally used to cast UnknownAttributeValue to
+	 * specific object when class is declared outside this package.
+	 *
+	 * @param self $obj Instance of AttributeValue
+	 * @return self
+	 */
+	public static function fromSelf(self $obj) {
+		return static::fromASN1($obj->toASN1());
+	}
+	
+	/**
 	 * Get attribute type's OID.
 	 *
 	 * @return string
 	 */
 	public function oid() {
 		return $this->_oid;
+	}
+	
+	/**
+	 * Get attribute value as a string.
+	 *
+	 * @return string
+	 */
+	public function stringValue() {
+		return $this->_transcodedString();
 	}
 	
 	/**
@@ -164,6 +186,6 @@ abstract class AttributeValue
 	}
 	
 	public function __toString() {
-		return $this->rfc2253String();
+		return $this->stringValue();
 	}
 }
