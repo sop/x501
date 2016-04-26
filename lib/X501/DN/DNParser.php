@@ -46,6 +46,33 @@ class DNParser
 	}
 	
 	/**
+	 * Escape a AttributeValue string conforming to RFC 2253.
+	 *
+	 * @link https://tools.ietf.org/html/rfc2253#section-2.4
+	 * @param string $str
+	 * @return string
+	 */
+	public static function escapeString($str) {
+		// one of the characters ",", "+", """, "\", "<", ">" or ";"
+		$str = preg_replace('/([,\+"\\\<\>;])/u', '\\\\$1', $str);
+		// a space character occurring at the end of the string
+		$str = preg_replace('/( )$/u', '\\\\$1', $str);
+		// a space or "#" character occurring at the beginning of the string
+		$str = preg_replace('/^([ #])/u', '\\\\$1', $str);
+		// implementation specific special characters
+		$str = preg_replace_callback('/([\pC])/u', 
+			function ($m) {
+				$octets = str_split(bin2hex($m[1]), 2);
+				return implode("", 
+					array_map(
+						function ($octet) {
+							return '\\' . strtoupper($octet);
+						}, $octets));
+			}, $str);
+		return $str;
+	}
+	
+	/**
 	 * Constructor
 	 *
 	 * @param string $dn Distinguised name
