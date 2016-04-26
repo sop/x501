@@ -11,43 +11,55 @@ use ASN1\Type\Primitive\UTF8String;
 use X501\ASN1\AttributeValue\AttributeValue;
 
 
+/**
+ * Base class for attribute values having <i>(Unbounded)DirectoryString</i>
+ * as a syntax.
+ *
+ * @link
+ *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2012/SelectedAttributeTypes.html#SelectedAttributeTypes.UnboundedDirectoryString
+ */
 abstract class DirectoryString extends AttributeValue
 {
 	/**
-	 * Teletex string syntax
+	 * Teletex string syntax.
 	 *
 	 * @var int
 	 */
 	const TELETEX = Element::TYPE_T61_STRING;
 	
 	/**
-	 * Printable string syntax
+	 * Printable string syntax.
 	 *
 	 * @var int
 	 */
 	const PRINTABLE = Element::TYPE_PRINTABLE_STRING;
 	
 	/**
-	 * BMP string syntax
+	 * BMP string syntax.
 	 *
 	 * @var int
 	 */
 	const BMP = Element::TYPE_BMP_STRING;
 	
 	/**
-	 * Universal string syntax
+	 * Universal string syntax.
 	 *
 	 * @var int
 	 */
 	const UNIVERSAL = Element::TYPE_UNIVERSAL_STRING;
 	
 	/**
-	 * UTF-8 string syntax
+	 * UTF-8 string syntax.
 	 *
 	 * @var int
 	 */
 	const UTF8 = Element::TYPE_UTF8_STRING;
 	
+	/**
+	 * Mapping from syntax enumeration to ASN.1 class name.
+	 *
+	 * @var array
+	 */
 	private static $_tagToCls = array(
 		/* @formatter:off */
 		self::TELETEX => T61String::class,
@@ -58,15 +70,38 @@ abstract class DirectoryString extends AttributeValue
 		/* @formatter:on */
 	);
 	
+	/**
+	 * ASN.1 type tag for the chosen syntax.
+	 *
+	 * @var int $_stringTag
+	 */
 	protected $_stringTag;
 	
+	/**
+	 * String value
+	 *
+	 * @var string $_value
+	 */
 	protected $_value;
 	
+	/**
+	 * Constructor
+	 *
+	 * @param string $value String value
+	 * @param int $string_tag Syntax choice
+	 */
 	public function __construct($value, $string_tag) {
 		$this->_value = $value;
 		$this->_stringTag = $string_tag;
 	}
 	
+	/**
+	 * Initialize from ASN.1.
+	 *
+	 * @param Element $el
+	 * @throws \UnexpectedValueException
+	 * @return self
+	 */
 	public static function fromASN1(Element $el) {
 		$tag = $el->tag();
 		if (!isset(self::$_tagToCls[$tag])) {
@@ -77,6 +112,11 @@ abstract class DirectoryString extends AttributeValue
 		return new static($el->str(), $tag);
 	}
 	
+	/**
+	 *
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::toASN1()
+	 * @return Element
+	 */
 	public function toASN1() {
 		if (!isset(self::$_tagToCls[$this->_stringTag])) {
 			throw new \UnexpectedValueException(
@@ -87,6 +127,11 @@ abstract class DirectoryString extends AttributeValue
 		return new $cls($this->_value);
 	}
 	
+	/**
+	 *
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::rfc2253String()
+	 * @return string
+	 */
 	public function rfc2253String() {
 		$value = $this->_transcoded();
 		// TeletexString is encoded as binary
@@ -96,6 +141,11 @@ abstract class DirectoryString extends AttributeValue
 		return $value;
 	}
 	
+	/**
+	 *
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::rfc4518String()
+	 * @return string
+	 */
 	public function rfc4518String() {
 		// step 1: Transcode
 		$value = $this->_transcoded();
@@ -111,9 +161,10 @@ abstract class DirectoryString extends AttributeValue
 	}
 	
 	/**
-	 * Transcode value to UTF-8
+	 * Transcode value to UTF-8.
 	 *
-	 * @throws \Exception
+	 * @link https://tools.ietf.org/html/rfc4518#section-2.1
+	 * @return string
 	 */
 	private function _transcoded() {
 		switch ($this->_stringTag) {
@@ -132,10 +183,17 @@ abstract class DirectoryString extends AttributeValue
 		case self::TELETEX:
 			return "#" . bin2hex($this->toASN1()->toDER());
 		default:
-			throw new \Exception("Unsupported string type");
+			throw new \LogicException("Unsupported string type");
 		}
 	}
 	
+	/**
+	 * Escape value conforming to RFC 2253.
+	 *
+	 * @link https://tools.ietf.org/html/rfc2253#section-2.4
+	 * @param string $str
+	 * @return string
+	 */
 	private static function _escapeRfc2253Value($str) {
 		// one of the characters ",", "+", """, "\", "<", ">" or ";"
 		$str = preg_replace('/([,\+"\\\<\>;])/u', '\\\\$1', $str);
@@ -156,6 +214,13 @@ abstract class DirectoryString extends AttributeValue
 		return $str;
 	}
 	
+	/**
+	 * Apply insignificant space handling conforming to RFC 4518.
+	 *
+	 * @link https://tools.ietf.org/html/rfc4518#section-2.6
+	 * @param string $str
+	 * @return string
+	 */
 	private static function _applyInsignificantSpaceHandling($str) {
 		// if value contains no non-space characters
 		if (preg_match('/^\p{Zs}*$/u', $str)) {

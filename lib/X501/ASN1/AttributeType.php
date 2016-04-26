@@ -125,9 +125,9 @@ class AttributeType
 	const OID_CLEARANCE_X501 = "2.5.1.5.55";
 	
 	/**
-	 * ASN.1 string types for attributes.
+	 * Default ASN.1 string types for attributes.
 	 *
-	 * Default type if UTF8String, so only divergent attributes are mapped here.
+	 * Attributes not mapped here shall use UTF8String as a default type.
 	 *
 	 * @var array
 	 */
