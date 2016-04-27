@@ -117,7 +117,7 @@ class AttributeType
 	const OID_ORGANIZATION_IDENTIFIER = "2.5.4.97";
 	
 	// Miscellany attribute OID's
-	const OID_EXTENSION_REQUEST = "1.2.840.113549.1.9.14";
+	// @todo: define these in implementation classes
 	const OID_AUTHENTICATION_INFO = "1.3.6.1.5.5.7.10.1";
 	const OID_ACCESS_IDENTITY = "1.3.6.1.5.5.7.10.2";
 	const OID_CHARGING_IDENTITY = "1.3.6.1.5.5.7.10.3";

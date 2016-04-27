@@ -105,8 +105,9 @@ class Name implements \Countable, \IteratorAggregate
 	
 	/**
 	 * Whether name is semantically equal to other.
-	 * Comparison conforms to rfc4518 string preparation algorithm.
+	 * Comparison conforms to RFC 4518 string preparation algorithm.
 	 *
+	 * @link https://tools.ietf.org/html/rfc4518
 	 * @param self $other
 	 * @return bool
 	 */
