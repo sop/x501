@@ -6,7 +6,7 @@ namespace X501\MatchingRule;
 /**
  * Implements binary matching rule.
  *
- * Used by unknown attribute.
+ * Generally used only by UnknownAttribute and custom attributes.
  */
 class BinaryMatch extends MatchingRule
 {
