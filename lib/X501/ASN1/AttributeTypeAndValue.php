@@ -98,12 +98,15 @@ class AttributeTypeAndValue
 		if ($this->oid() !== $other->oid()) {
 			return false;
 		}
-		// check that attribute values match
-		if (strcasecmp($this->_value->rfc4518String(), 
-			$other->_value->rfc4518String()) !== 0) {
-			return false;
+		$matcher = $this->_value->equalityMatchingRule();
+		$result = $matcher->compare($this->_value->stringValue(), 
+			$other->_value->stringValue());
+		// match
+		if ($result) {
+			return true;
 		}
-		return true;
+		// no match or Undefined
+		return false;
 	}
 	
 	public function __toString() {

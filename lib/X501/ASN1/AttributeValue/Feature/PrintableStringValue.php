@@ -4,7 +4,9 @@ namespace X501\ASN1\AttributeValue\Feature;
 
 use ASN1\Element;
 use ASN1\Type\Primitive\PrintableString;
+use X501\ASN1\AttributeValue\AttributeValue;
 use X501\DN\DNParser;
+use X501\MatchingRule\CaseIgnoreMatch;
 
 
 /**
@@ -13,25 +15,65 @@ use X501\DN\DNParser;
 trait PrintableStringValue
 {
 	/**
-	 * String value
+	 * String value.
 	 *
 	 * @var string $_string
 	 */
 	protected $_string;
 	
+	/**
+	 *
+	 * @see AttributeValue::fromASN1
+	 * @param Element $el
+	 * @return self
+	 */
 	public static function fromASN1(Element $el) {
 		$el->expectType(Element::TYPE_PRINTABLE_STRING);
 		return new self($el->str());
 	}
 	
+	/**
+	 *
+	 * @see AttributeValue::toASN1
+	 * @return PrintableString
+	 */
 	public function toASN1() {
 		return new PrintableString($this->_string);
 	}
 	
+	/**
+	 *
+	 * @see AttributeValue::stringValue
+	 * @return string
+	 */
+	public function stringValue() {
+		return $this->_string;
+	}
+	
+	/**
+	 *
+	 * @see AttributeValue::equalityMatchingRule
+	 * @return CaseIgnoreMatch
+	 */
+	public function equalityMatchingRule() {
+		// default to caseIgnoreMatch
+		return new CaseIgnoreMatch(Element::TYPE_PRINTABLE_STRING);
+	}
+	
+	/**
+	 *
+	 * @see AttributeValue::rfc2253String
+	 * @return string
+	 */
 	public function rfc2253String() {
 		return DNParser::escapeString($this->_transcodedString());
 	}
 	
+	/**
+	 *
+	 * @see AttributeValue::_transcodedString
+	 * @return string
+	 */
 	protected function _transcodedString() {
 		// PrintableString maps directly to UTF-8
 		return $this->_string;

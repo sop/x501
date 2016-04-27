@@ -6,6 +6,7 @@ use ASN1\Element;
 use X501\ASN1\Attribute;
 use X501\ASN1\AttributeType;
 use X501\ASN1\AttributeTypeAndValue;
+use X501\MatchingRule\MatchingRule;
 
 
 /**
@@ -52,6 +53,20 @@ abstract class AttributeValue
 	 * @return Element
 	 */
 	abstract public function toASN1();
+	
+	/**
+	 * Get attribute value as a string
+	 *
+	 * @return string
+	 */
+	abstract public function stringValue();
+	
+	/**
+	 * Get matching rule for equality comparison.
+	 *
+	 * @return MatchingRule
+	 */
+	abstract public function equalityMatchingRule();
 	
 	/**
 	 * Get attribute value as a string conforming to RFC 2253.
@@ -118,56 +133,6 @@ abstract class AttributeValue
 	}
 	
 	/**
-	 * Get attribute value as a string.
-	 *
-	 * @return string
-	 */
-	public function stringValue() {
-		return $this->_transcodedString();
-	}
-	
-	/**
-	 * Get attribute value as a string by first applying internationalized
-	 * string preparation as specified in RFC 4518.
-	 *
-	 * @link https://tools.ietf.org/html/rfc4518
-	 * @return string
-	 */
-	public function rfc4518String() {
-		// step 1: Transcode
-		$value = $this->_transcodedString();
-		// step 2: Map (NOT IMPLEMENTED)
-		// step 3: Normalize
-		$value = normalizer_normalize($value, \Normalizer::NFKD);
-		// step 4: Prohibit (NOT IMPLEMENTED)
-		// step 5: Check bidi (NOT IMPLEMENTED)
-		// step 6: Insignificant Character Handling
-		// @todo: consider attribute type
-		$value = self::_applyInsignificantSpaceHandling($value);
-		return $value;
-	}
-	
-	/**
-	 * Apply insignificant space handling conforming to RFC 4518.
-	 *
-	 * @link https://tools.ietf.org/html/rfc4518#section-2.6
-	 * @param string $str
-	 * @return string
-	 */
-	private static function _applyInsignificantSpaceHandling($str) {
-		// if value contains no non-space characters
-		if (preg_match('/^\p{Zs}*$/u', $str)) {
-			return "  ";
-		}
-		// trim leading and trailing spaces
-		$str = preg_replace('/^\p{Zs}+/u', '', $str);
-		$str = preg_replace('/\p{Zs}+$/u', '', $str);
-		// convert inner space sequences to two U+0020 characters
-		$str = preg_replace('/\p{Zs}+/u', "  ", $str);
-		return " $str ";
-	}
-	
-	/**
 	 * Get Attribute object with this as a single value.
 	 *
 	 * @return Attribute
@@ -185,7 +150,12 @@ abstract class AttributeValue
 		return AttributeTypeAndValue::fromAttributeValue($this);
 	}
 	
+	/**
+	 * Get attribute value as an UTF-8 encoded string.
+	 *
+	 * @return string
+	 */
 	public function __toString() {
-		return $this->stringValue();
+		return $this->_transcodedString();
 	}
 }

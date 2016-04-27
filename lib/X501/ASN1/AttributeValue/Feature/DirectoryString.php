@@ -10,6 +10,8 @@ use ASN1\Type\Primitive\UniversalString;
 use ASN1\Type\Primitive\UTF8String;
 use X501\ASN1\AttributeValue\AttributeValue;
 use X501\DN\DNParser;
+use X501\MatchingRule\CaseIgnoreMatch;
+use X501\StringPrep\TranscodeStep;
 
 
 /**
@@ -97,7 +99,6 @@ abstract class DirectoryString extends AttributeValue
 	}
 	
 	/**
-	 * Initialize from ASN.1.
 	 *
 	 * @param Element $el
 	 * @throws \UnexpectedValueException
@@ -130,6 +131,24 @@ abstract class DirectoryString extends AttributeValue
 	
 	/**
 	 *
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::stringValue()
+	 * @return string
+	 */
+	public function stringValue() {
+		return $this->_string;
+	}
+	
+	/**
+	 *
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::equalityMatchingRule()
+	 * @return CaseIgnoreMatch
+	 */
+	public function equalityMatchingRule() {
+		return new CaseIgnoreMatch($this->_stringTag);
+	}
+	
+	/**
+	 *
 	 * @see \X501\ASN1\AttributeValue\AttributeValue::rfc2253String()
 	 * @return string
 	 */
@@ -147,23 +166,7 @@ abstract class DirectoryString extends AttributeValue
 	 * @return string
 	 */
 	protected function _transcodedString() {
-		switch ($this->_stringTag) {
-		// UTF-8 string as is
-		case self::UTF8:
-			return $this->_string;
-		// PrintableString maps directly to UTF-8
-		case self::PRINTABLE:
-			return $this->_string;
-		case self::BMP:
-			return mb_convert_encoding($this->_string, "UTF-8", "UCS-2BE");
-		case self::UNIVERSAL:
-			return mb_convert_encoding($this->_string, "UTF-8", "UCS-4BE");
-		// TeletexString is such a hairy ball that we just 
-		// encode it as a "non string"
-		case self::TELETEX:
-			return "#" . bin2hex($this->toASN1()->toDER());
-		default:
-			throw new \LogicException("Unsupported string type");
-		}
+		$step = new TranscodeStep($this->_stringTag);
+		return $step->apply($this->_string);
 	}
 }

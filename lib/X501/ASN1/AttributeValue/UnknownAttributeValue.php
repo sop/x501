@@ -3,10 +3,11 @@
 namespace X501\ASN1\AttributeValue;
 
 use ASN1\Element;
+use X501\MatchingRule\BinaryMatch;
 
 
 /**
- * Class hold ASN.1 structure of an unimplemented attribute value.
+ * Class to hold ASN.1 structure of an unimplemented attribute value.
  */
 class UnknownAttributeValue extends AttributeValue
 {
@@ -39,11 +40,30 @@ class UnknownAttributeValue extends AttributeValue
 	
 	/**
 	 *
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::stringValue()
+	 * @return string
+	 */
+	public function stringValue() {
+		// return DER encoding as a hexstring
+		return "#" . bin2hex($this->_element->toDER());
+	}
+	
+	/**
+	 *
+	 * @see \X501\ASN1\AttributeValue\AttributeValue::equalityMatchingRule()
+	 * @return BinaryMatch
+	 */
+	public function equalityMatchingRule() {
+		return new BinaryMatch();
+	}
+	
+	/**
+	 *
 	 * @see \X501\ASN1\AttributeValue\AttributeValue::rfc2253String()
 	 * @return string
 	 */
 	public function rfc2253String() {
-		return $this->_transcodedString();
+		return $this->stringValue();
 	}
 	
 	/**
@@ -52,7 +72,6 @@ class UnknownAttributeValue extends AttributeValue
 	 * @return string
 	 */
 	protected function _transcodedString() {
-		// return DER encoding as a hexstring
-		return "#" . bin2hex($this->_element->toDER());
+		return $this->stringValue();
 	}
 }
