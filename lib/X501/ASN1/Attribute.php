@@ -113,6 +113,37 @@ class Attribute implements \Countable, \IteratorAggregate
 	}
 	
 	/**
+	 * Cast attribute values to another AttributeValue class.
+	 *
+	 * This method is generally used to cast UnknownAttributeValue values
+	 * to specific objects when class is declared outside this package.
+	 *
+	 * The new class must be derived from AttributeValue and have the same OID
+	 * as current attribute values.
+	 *
+	 * @param string $cls AttributeValue class name
+	 * @throws \LogicException
+	 * @return self
+	 */
+	public function castValues($cls) {
+		$refl = new \ReflectionClass($cls);
+		if (!$refl->isSubclassOf(AttributeValue::class)) {
+			throw new \LogicException(
+				"$cls must be derived from " . AttributeValue::class);
+		}
+		$oid = $this->oid();
+		$values = array_map(
+			function (AttributeValue $value) use ($cls, $oid) {
+				$value = $cls::fromSelf($value);
+				if ($value->oid() != $oid) {
+					throw new \LogicException("Attribute OID mismatch");
+				}
+				return $value;
+			}, $this->_values);
+		return self::fromAttributeValues(...$values);
+	}
+	
+	/**
 	 *
 	 * @see Countable::count()
 	 * @return int
