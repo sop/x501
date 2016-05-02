@@ -18,6 +18,6 @@ class NormalizeStep implements PrepareStep
 	 * @return string
 	 */
 	public function apply($string) {
-		return normalizer_normalize($string, \Normalizer::NFKD);
+		return normalizer_normalize($string, \Normalizer::NFKC);
 	}
 }
