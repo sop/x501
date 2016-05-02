@@ -48,7 +48,8 @@ class StringPreparer
 			self::STEP_PROHIBIT => new ProhibitStep(), 
 			self::STEP_CHECK_BIDI => new CheckBidiStep(), 
 			// @todo Vary by string type
-			self::STEP_INSIGNIFICANT_CHARS => new InsignificantSpaceStep()
+			self::STEP_INSIGNIFICANT_CHARS => 
+				new InsignificantNonSubstringSpaceStep()
 			/* @formatter:on */
 		);
 		return new self($steps);
