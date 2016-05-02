@@ -7,9 +7,11 @@ namespace X501\StringPrep;
  * Implements 'Insignificant Space Handling' step of the Internationalized
  * String Preparation as specified by RFC 4518.
  *
+ * This variant handles input strings that are non-substring assertion values.
+ *
  * @link https://tools.ietf.org/html/rfc4518#section-2.6.1
  */
-class InsignificantSpaceStep implements PrepareStep
+class InsignificantNonSubstringSpaceStep implements PrepareStep
 {
 	/**
 	 *
