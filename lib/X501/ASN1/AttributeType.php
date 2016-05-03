@@ -117,11 +117,6 @@ class AttributeType
 	const OID_ORGANIZATION_IDENTIFIER = "2.5.4.97";
 	
 	// Miscellany attribute OID's
-	// @todo: define these in implementation classes
-	const OID_AUTHENTICATION_INFO = "1.3.6.1.5.5.7.10.1";
-	const OID_ACCESS_IDENTITY = "1.3.6.1.5.5.7.10.2";
-	const OID_CHARGING_IDENTITY = "1.3.6.1.5.5.7.10.3";
-	const OID_GROUP = "1.3.6.1.5.5.7.10.4";
 	const OID_CLEARANCE_X501 = "2.5.1.5.55";
 	
 	/**
@@ -131,7 +126,7 @@ class AttributeType
 	 *
 	 * @var array
 	 */
-	private static $_attrStringType = array(
+	const ATTR_STRING_TYPE = array(
 		/* @formatter:off */
 		self::OID_DN_QUALIFIER => Element::TYPE_PRINTABLE_STRING, 
 		self::OID_COUNTRY_NAME => Element::TYPE_PRINTABLE_STRING, 
@@ -149,7 +144,7 @@ class AttributeType
 	 *
 	 * @var array
 	 */
-	private static $_oidToAttrName = array(
+	const ATTR_NAME_MAPPING = array(
 		/* @formatter:off */
 		"0.9.2342.19200300.100.1.1" => ["uid", "userid"],
 		"0.9.2342.19200300.100.1.2" => ["textEncodedORAddress"],
@@ -366,8 +361,8 @@ class AttributeType
 	 * @return string
 	 */
 	public function typeName() {
-		if (isset(self::$_oidToAttrName[$this->_oid])) {
-			return self::$_oidToAttrName[$this->_oid][0];
+		if (array_key_exists($this->_oid, self::ATTR_NAME_MAPPING)) {
+			return self::ATTR_NAME_MAPPING[$this->_oid][0];
 		}
 		return $this->_oid;
 	}
@@ -391,7 +386,7 @@ class AttributeType
 		if (!isset($map)) {
 			$map = array();
 			// for eatch attribute type
-			foreach (self::$_oidToAttrName as $oid => $names) {
+			foreach (self::ATTR_NAME_MAPPING as $oid => $names) {
 				// for primary name and aliases
 				foreach ($names as $name) {
 					$map[strtolower($name)] = $oid;
@@ -430,10 +425,10 @@ class AttributeType
 	 * @return StringType
 	 */
 	public static function asn1StringForType($oid, $str) {
-		if (!isset(self::$_attrStringType[$oid])) {
+		if (!array_key_exists($oid, self::ATTR_STRING_TYPE)) {
 			return new UTF8String($str);
 		}
-		switch (self::$_attrStringType[$oid]) {
+		switch (self::ATTR_STRING_TYPE[$oid]) {
 		case Element::TYPE_PRINTABLE_STRING:
 			return new PrintableString($str);
 		}

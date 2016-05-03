@@ -22,7 +22,7 @@ abstract class AttributeValue
 	 *
 	 * @var array
 	 */
-	private static $_oidToCls = array(
+	const OID_TO_CLS = array(
 		/* @formatter:off */
 		AttributeType::OID_COMMON_NAME => CommonNameValue::class,
 		AttributeType::OID_SURNAME => SurnameValue::class,
@@ -36,7 +36,7 @@ abstract class AttributeValue
 		AttributeType::OID_DESCRIPTION => DescriptionValue::class,
 		AttributeType::OID_NAME => NameValue::class,
 		AttributeType::OID_GIVEN_NAME => GivenNameValue::class,
-		AttributeType::OID_PSEUDONYM => PseudonymValue::class,
+		AttributeType::OID_PSEUDONYM => PseudonymValue::class
 		/* @formatter:on */
 	);
 	
@@ -103,10 +103,10 @@ abstract class AttributeValue
 	 * @return self
 	 */
 	public static function fromASN1ByOID($oid, Element $el) {
-		if (!isset(self::$_oidToCls[$oid])) {
+		if (!array_key_exists($oid, self::OID_TO_CLS)) {
 			return new UnknownAttributeValue($oid, $el);
 		}
-		$cls = self::$_oidToCls[$oid];
+		$cls = self::OID_TO_CLS[$oid];
 		return $cls::fromASN1($el);
 	}
 	
