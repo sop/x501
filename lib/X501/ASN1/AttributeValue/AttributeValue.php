@@ -20,9 +20,11 @@ abstract class AttributeValue
 	/**
 	 * Mapping from attribute type OID to attribute value class name.
 	 *
+	 * @internal
+	 *
 	 * @var array
 	 */
-	const OID_TO_CLS = array(
+	const MAP_OID_TO_CLASS = array(
 		/* @formatter:off */
 		AttributeType::OID_COMMON_NAME => CommonNameValue::class,
 		AttributeType::OID_SURNAME => SurnameValue::class,
@@ -103,10 +105,10 @@ abstract class AttributeValue
 	 * @return self
 	 */
 	public static function fromASN1ByOID($oid, Element $el) {
-		if (!array_key_exists($oid, self::OID_TO_CLS)) {
+		if (!array_key_exists($oid, self::MAP_OID_TO_CLASS)) {
 			return new UnknownAttributeValue($oid, $el);
 		}
-		$cls = self::OID_TO_CLS[$oid];
+		$cls = self::MAP_OID_TO_CLASS[$oid];
 		return $cls::fromASN1($el);
 	}
 	

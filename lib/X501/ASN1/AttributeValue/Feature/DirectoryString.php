@@ -61,9 +61,11 @@ abstract class DirectoryString extends AttributeValue
 	/**
 	 * Mapping from syntax enumeration to ASN.1 class name.
 	 *
+	 * @internal
+	 *
 	 * @var array
 	 */
-	const TAG_TO_CLS = array(
+	const MAP_TAG_TO_CLASS = array(
 		/* @formatter:off */
 		self::TELETEX => T61String::class,
 		self::PRINTABLE => PrintableString::class,
@@ -106,7 +108,7 @@ abstract class DirectoryString extends AttributeValue
 	 */
 	public static function fromASN1(Element $el) {
 		$tag = $el->tag();
-		if (!array_key_exists($tag, self::TAG_TO_CLS)) {
+		if (!array_key_exists($tag, self::MAP_TAG_TO_CLASS)) {
 			throw new \UnexpectedValueException(
 				"Type " . Element::tagToName($tag) .
 					 " is not valid DirectoryString");
@@ -120,12 +122,12 @@ abstract class DirectoryString extends AttributeValue
 	 * @return Element
 	 */
 	public function toASN1() {
-		if (!array_key_exists($this->_stringTag, self::TAG_TO_CLS)) {
+		if (!array_key_exists($this->_stringTag, self::MAP_TAG_TO_CLASS)) {
 			throw new \UnexpectedValueException(
 				"Type " . Element::tagToName($this->_stringTag) .
 					 " is not valid DirectoryString");
 		}
-		$cls = self::TAG_TO_CLS[$this->_stringTag];
+		$cls = self::MAP_TAG_TO_CLASS[$this->_stringTag];
 		return new $cls($this->_string);
 	}
 	

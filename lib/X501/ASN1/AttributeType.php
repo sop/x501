@@ -124,9 +124,11 @@ class AttributeType
 	 *
 	 * Attributes not mapped here shall use UTF8String as a default type.
 	 *
+	 * @internal
+	 *
 	 * @var array
 	 */
-	const ATTR_STRING_TYPE = array(
+	const MAP_ATTR_TO_STR_TYPE = array(
 		/* @formatter:off */
 		self::OID_DN_QUALIFIER => Element::TYPE_PRINTABLE_STRING, 
 		self::OID_COUNTRY_NAME => Element::TYPE_PRINTABLE_STRING, 
@@ -142,9 +144,11 @@ class AttributeType
 	 *
 	 * Generated using ldap-attribs.py.
 	 *
+	 * @internal
+	 *
 	 * @var array
 	 */
-	const ATTR_NAME_MAPPING = array(
+	const MAP_OID_TO_NAME = array(
 		/* @formatter:off */
 		"0.9.2342.19200300.100.1.1" => ["uid", "userid"],
 		"0.9.2342.19200300.100.1.2" => ["textEncodedORAddress"],
@@ -361,8 +365,8 @@ class AttributeType
 	 * @return string
 	 */
 	public function typeName() {
-		if (array_key_exists($this->_oid, self::ATTR_NAME_MAPPING)) {
-			return self::ATTR_NAME_MAPPING[$this->_oid][0];
+		if (array_key_exists($this->_oid, self::MAP_OID_TO_NAME)) {
+			return self::MAP_OID_TO_NAME[$this->_oid][0];
 		}
 		return $this->_oid;
 	}
@@ -386,7 +390,7 @@ class AttributeType
 		if (!isset($map)) {
 			$map = array();
 			// for eatch attribute type
-			foreach (self::ATTR_NAME_MAPPING as $oid => $names) {
+			foreach (self::MAP_OID_TO_NAME as $oid => $names) {
 				// for primary name and aliases
 				foreach ($names as $name) {
 					$map[strtolower($name)] = $oid;
@@ -425,10 +429,10 @@ class AttributeType
 	 * @return StringType
 	 */
 	public static function asn1StringForType($oid, $str) {
-		if (!array_key_exists($oid, self::ATTR_STRING_TYPE)) {
+		if (!array_key_exists($oid, self::MAP_ATTR_TO_STR_TYPE)) {
 			return new UTF8String($str);
 		}
-		switch (self::ATTR_STRING_TYPE[$oid]) {
+		switch (self::MAP_ATTR_TO_STR_TYPE[$oid]) {
 		case Element::TYPE_PRINTABLE_STRING:
 			return new PrintableString($str);
 		}
