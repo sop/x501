@@ -22,7 +22,7 @@ class AttributeTypeTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEncode(AttributeType $type) {
 		$der = $type->toASN1()->toDER();
-		$this->assertTrue(is_string($der));
+		$this->assertInternalType("string", $der);
 		return $der;
 	}
 	
@@ -64,5 +64,18 @@ class AttributeTypeTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testName(AttributeType $type) {
 		$this->assertEquals("name", $type->typeName());
+	}
+	
+	public function testUnknownName() {
+		static $oid = "1.3.6.1.3";
+		$type = new AttributeType($oid);
+		$this->assertEquals($oid, $type->typeName());
+	}
+	
+	/**
+	 * @expectedException OutOfBoundsException
+	 */
+	public function testNameToOIDFail() {
+		AttributeType::attrNameToOID("unknown");
 	}
 }

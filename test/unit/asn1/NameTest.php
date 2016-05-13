@@ -23,7 +23,7 @@ class NameTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEncode(Name $name) {
 		$der = $name->toASN1()->toDER();
-		$this->assertTrue(is_string($der));
+		$this->assertInternalType("string", $der);
 		return $der;
 	}
 	
@@ -54,6 +54,15 @@ class NameTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @param Name $name
 	 */
+	public function testAll(Name $name) {
+		$this->assertContainsOnlyInstancesOf(RDN::class, $name->all());
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param Name $name
+	 */
 	public function testCount(Name $name) {
 		$this->assertCount(2, $name);
 	}
@@ -64,11 +73,11 @@ class NameTest extends PHPUnit_Framework_TestCase
 	 * @param Name $name
 	 */
 	public function testIterable(Name $name) {
-		$rdns = array();
+		$values = array();
 		foreach ($name as $rdn) {
-			$rdns[] = $rdn;
+			$values[] = $rdn;
 		}
-		$this->assertCount(2, $rdns);
+		$this->assertContainsOnlyInstancesOf(RDN::class, $values);
 	}
 	
 	/**
@@ -78,5 +87,14 @@ class NameTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testString(Name $name) {
 		$this->assertEquals("name=one,name=two", $name->toString());
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param Name $name
+	 */
+	public function testToString(Name $name) {
+		$this->assertInternalType("string", strval($name));
 	}
 }

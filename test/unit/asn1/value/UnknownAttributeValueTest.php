@@ -45,4 +45,13 @@ class UnknownAttributeValueTest extends PHPUnit_Framework_TestCase
 	public function testString(AttributeValue $val) {
 		$this->assertEquals("#0c04" . bin2hex("Test"), $val->rfc2253String());
 	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param AttributeValue $val
+	 */
+	public function testToString(AttributeValue $val) {
+		$this->assertInternalType("string", strval($val));
+	}
 }

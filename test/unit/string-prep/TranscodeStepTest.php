@@ -38,7 +38,7 @@ class TranscodeStepTest extends PHPUnit_Framework_TestCase
 	public function testTeletex() {
 		static $str = "TEST";
 		$step = new TranscodeStep(Element::TYPE_T61_STRING);
-		$this->assertTrue(is_string($step->apply($str)));
+		$this->assertInternalType("string", $step->apply($str));
 	}
 	
 	/**

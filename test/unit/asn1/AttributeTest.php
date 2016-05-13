@@ -2,6 +2,9 @@
 
 use ASN1\Type\Constructed\Sequence;
 use X501\ASN1\Attribute;
+use X501\ASN1\AttributeType;
+use X501\ASN1\AttributeValue\AttributeValue;
+use X501\ASN1\AttributeValue\CommonNameValue;
 use X501\ASN1\AttributeValue\NameValue;
 
 
@@ -24,7 +27,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEncode(Attribute $attr) {
 		$der = $attr->toASN1()->toDER();
-		$this->assertTrue(is_string($der));
+		$this->assertInternalType("string", $der);
 		return $der;
 	}
 	
@@ -55,6 +58,15 @@ class AttributeTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @param Attribute $attr
 	 */
+	public function testType(Attribute $attr) {
+		$this->assertEquals(AttributeType::fromName("name"), $attr->type());
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param Attribute $attr
+	 */
 	public function testFirst(Attribute $attr) {
 		$this->assertEquals("one", $attr->first()
 			->rfc2253String());
@@ -66,7 +78,8 @@ class AttributeTest extends PHPUnit_Framework_TestCase
 	 * @param Attribute $attr
 	 */
 	public function testValues(Attribute $attr) {
-		$this->assertCount(2, $attr->values());
+		$this->assertContainsOnlyInstancesOf(AttributeValue::class, 
+			$attr->values());
 	}
 	
 	/**
@@ -88,6 +101,37 @@ class AttributeTest extends PHPUnit_Framework_TestCase
 		foreach ($attr as $value) {
 			$values[] = $value;
 		}
-		$this->assertCount(2, $values);
+		$this->assertContainsOnlyInstancesOf(AttributeValue::class, $values);
+	}
+	
+	/**
+	 * @expectedException LogicException
+	 */
+	public function testCreateMismatch() {
+		Attribute::fromAttributeValues(new NameValue("name"), 
+			new CommonNameValue("cn"));
+	}
+	
+	/**
+	 * @expectedException LogicException
+	 */
+	public function testEmptyFromValuesFail() {
+		Attribute::fromAttributeValues();
+	}
+	
+	public function testCreateEmpty() {
+		$attr = new Attribute(AttributeType::fromName("cn"));
+		$this->assertInstanceOf(Attribute::class, $attr);
+		return $attr;
+	}
+	
+	/**
+	 * @depends testCreateEmpty
+	 * @expectedException LogicException
+	 *
+	 * @param Attribute $attr
+	 */
+	public function testEmptyFirstFail(Attribute $attr) {
+		$attr->first();
 	}
 }

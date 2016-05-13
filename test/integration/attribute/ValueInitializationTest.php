@@ -1,5 +1,6 @@
 <?php
 
+use ASN1\Type\StringType;
 use X501\ASN1\AttributeType;
 use X501\ASN1\AttributeValue\AttributeValue;
 use X501\ASN1\AttributeValue\CommonNameValue;
@@ -24,7 +25,7 @@ use X501\ASN1\AttributeValue\TitleValue;
 class ValueInitializationTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @dataProvider provider
+	 * @dataProvider provideStringAttribClasses
 	 */
 	public function testCreate($cls, $oid) {
 		$el = AttributeType::asn1StringForType($oid, "Test");
@@ -32,7 +33,16 @@ class ValueInitializationTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf($cls, $val);
 	}
 	
-	public function provider() {
+	/**
+	 * @dataProvider provideStringAttribClasses
+	 */
+	public function testASN1($cls, $oid) {
+		$val = new $cls("Test");
+		$el = $val->toASN1();
+		$this->assertInstanceOf(StringType::class, $el);
+	}
+	
+	public function provideStringAttribClasses() {
 		return array(
 			/* @formatter:off */
 			[CommonNameValue::class, AttributeType::OID_COMMON_NAME],

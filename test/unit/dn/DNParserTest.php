@@ -10,17 +10,17 @@ use X501\DN\DNParser;
 class DNParserTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @dataProvider provideParser
+	 * @dataProvider provideParseString
 	 *
 	 * @param string $dn Distinguished name
 	 * @param array $expected Parser result
 	 */
-	public function testParser($dn, $expected) {
+	public function testParseString($dn, $expected) {
 		$result = DNParser::parseString($dn);
 		$this->assertEquals($expected, $result);
 	}
 	
-	public function provideParser() {
+	public function provideParseString() {
 		return array(
 			/* @formatter:off */
 			[
@@ -127,5 +127,93 @@ class DNParserTest extends PHPUnit_Framework_TestCase
 			]
 			/* @formatter:on */
 		);
+	}
+	
+	/**
+	 * @dataProvider provideEscapeString
+	 *
+	 * @param string $str
+	 * @param string $expected
+	 */
+	public function testEscapeString($str, $expected) {
+		$escaped = DNParser::escapeString($str);
+		$this->assertEquals($expected, $escaped);
+	}
+	
+	public function provideEscapeString() {
+		return array(
+			/* @formatter:off */
+			[',', '\,'],
+			['+', '\+'],
+			['"', '\"'],
+			['\\', '\\\\'],
+			['<', '\<'],
+			['>', '\>'],
+			[';', '\;'],
+			['test ', 'test\ '],
+			['test  ', 'test \ '],
+			[' test', '\ test'],
+			['  test', '\  test'],
+			["\x00", '\00'],
+			// UTF-8 'ZERO WIDTH SPACE'
+			["\xE2\x80\x8B", '\E2\80\8B']
+			/* @formatter:on */
+		);
+	}
+	
+	/**
+	 * @expectedException UnexpectedValueException
+	 */
+	public function testUnexpectedNameEnd() {
+		DNParser::parseString("cn=#05000");
+	}
+	
+	/**
+	 * @expectedException UnexpectedValueException
+	 */
+	public function testInvalidTypeAndValuePair() {
+		DNParser::parseString("cn");
+	}
+	
+	/**
+	 * @expectedException UnexpectedValueException
+	 */
+	public function testInvalidAttributeType() {
+		DNParser::parseString("#00=fail");
+	}
+	
+	/**
+	 * @expectedException UnexpectedValueException
+	 */
+	public function testUnexpectedQuotation() {
+		DNParser::parseString("cn=fa\"il");
+	}
+	
+	/**
+	 * @expectedException UnexpectedValueException
+	 */
+	public function testInvalidHexString() {
+		DNParser::parseString("cn=#.");
+	}
+	
+	/**
+	 * @expectedException UnexpectedValueException
+	 */
+	public function testInvalidHexDER() {
+		DNParser::parseString("cn=#badcafee");
+	}
+	
+	/**
+	 * @expectedException UnexpectedValueException
+	 */
+	public function testUnexpectedPairEnd() {
+		DNParser::parseString("cn=\\");
+	}
+	
+	/**
+	 * @expectedException UnexpectedValueException
+	 */
+	public function testInvalidHexPair() {
+		DNParser::parseString("cn=\\xx");
 	}
 }

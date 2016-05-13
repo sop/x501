@@ -1,6 +1,7 @@
 <?php
 
 use ASN1\Type\Constructed\Set;
+use X501\ASN1\AttributeTypeAndValue;
 use X501\ASN1\AttributeValue\NameValue;
 use X501\ASN1\RDN;
 
@@ -24,7 +25,7 @@ class RDNTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEncode(RDN $rdn) {
 		$der = $rdn->toASN1()->toDER();
-		$this->assertTrue(is_string($der));
+		$this->assertInternalType("string", $der);
 		return $der;
 	}
 	
@@ -55,6 +56,16 @@ class RDNTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @param RDN $rdn
 	 */
+	public function testAll(RDN $rdn) {
+		$this->assertContainsOnlyInstancesOf(AttributeTypeAndValue::class, 
+			$rdn->all());
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param RDN $rdn
+	 */
 	public function testCount(RDN $rdn) {
 		$this->assertCount(2, $rdn);
 	}
@@ -65,11 +76,12 @@ class RDNTest extends PHPUnit_Framework_TestCase
 	 * @param RDN $rdn
 	 */
 	public function testIterable(RDN $rdn) {
-		$tvs = array();
+		$values = array();
 		foreach ($rdn as $tv) {
-			$tvs[] = $tv;
+			$values[] = $tv;
 		}
-		$this->assertCount(2, $tvs);
+		$this->assertContainsOnlyInstancesOf(AttributeTypeAndValue::class, 
+			$values);
 	}
 	
 	/**
@@ -79,5 +91,21 @@ class RDNTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testString(RDN $rdn) {
 		$this->assertEquals("name=one+name=two", $rdn->toString());
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param RDN $rdn
+	 */
+	public function testToString(RDN $rdn) {
+		$this->assertInternalType("string", strval($rdn));
+	}
+	
+	/**
+	 * @expectedException UnexpectedValueException
+	 */
+	public function testCreateFail() {
+		new RDN();
 	}
 }

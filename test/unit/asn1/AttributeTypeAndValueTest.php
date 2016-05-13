@@ -23,7 +23,7 @@ class AttributeTypeAndValueTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEncode(AttributeTypeAndValue $atv) {
 		$der = $atv->toASN1()->toDER();
-		$this->assertTrue(is_string($der));
+		$this->assertInternalType("string", $der);
 		return $der;
 	}
 	
@@ -67,5 +67,14 @@ class AttributeTypeAndValueTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testString(AttributeTypeAndValue $atv) {
 		$this->assertEquals("name=one", $atv->toString());
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param AttributeTypeAndValue $atv
+	 */
+	public function testToString(AttributeTypeAndValue $atv) {
+		$this->assertInternalType("string", strval($atv));
 	}
 }
