@@ -111,7 +111,7 @@ abstract class DirectoryString extends AttributeValue
 		if (!array_key_exists($tag, self::MAP_TAG_TO_CLASS)) {
 			throw new \UnexpectedValueException(
 				"Type " . Element::tagToName($tag) .
-					 " is not valid DirectoryString");
+					 " is not valid DirectoryString.");
 		}
 		return new static($el->str(), $tag);
 	}
@@ -125,7 +125,7 @@ abstract class DirectoryString extends AttributeValue
 		if (!array_key_exists($this->_stringTag, self::MAP_TAG_TO_CLASS)) {
 			throw new \UnexpectedValueException(
 				"Type " . Element::tagToName($this->_stringTag) .
-					 " is not valid DirectoryString");
+					 " is not valid DirectoryString.");
 		}
 		$cls = self::MAP_TAG_TO_CLASS[$this->_stringTag];
 		return new $cls($this->_string);

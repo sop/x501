@@ -415,7 +415,7 @@ class AttributeType
 		$map = self::_oidReverseMap();
 		$k = strtolower($name);
 		if (!isset($map[$k])) {
-			throw new \OutOfBoundsException("No OID for $name");
+			throw new \OutOfBoundsException("No OID for $name.");
 		}
 		return $map[$k];
 	}

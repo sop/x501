@@ -30,7 +30,7 @@ class RDN implements \Countable, \IteratorAggregate
 	public function __construct(AttributeTypeAndValue ...$attribs) {
 		if (!count($attribs)) {
 			throw new \UnexpectedValueException(
-				"RDN must have at least one AttributeTypeAndValue");
+				"RDN must have at least one AttributeTypeAndValue.");
 		}
 		$this->_attribs = $attribs;
 	}

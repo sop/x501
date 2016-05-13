@@ -93,7 +93,7 @@ class DNParser
 		$name = $this->_parseName($offset);
 		if ($offset < $this->_len) {
 			throw new \RuntimeException(
-				"Parser finished before the end of string");
+				"Parser finished before the end of string.");
 		}
 		return $name;
 	}
@@ -172,7 +172,7 @@ class DNParser
 		$type = $this->_parseAttrType($idx);
 		$this->_skipWs($idx);
 		if ($idx >= $this->_len || $this->_dn[$idx++] !== "=") {
-			throw new \UnexpectedValueException("Invalid type and value pair");
+			throw new \UnexpectedValueException("Invalid type and value pair.");
 		}
 		$this->_skipWs($idx);
 		// hexstring
@@ -203,7 +203,7 @@ class DNParser
 			// name
 			$type = $this->_regexMatch('/^[a-z][a-z0-9\-]*/i', $idx);
 			if (null === $type) {
-				throw new \UnexpectedValueException("Invalid attribute type");
+				throw new \UnexpectedValueException("Invalid attribute type.");
 			}
 		}
 		$offset = $idx;
@@ -249,7 +249,7 @@ class DNParser
 					$wsidx = null;
 					continue;
 				} else if ($c === '"') {
-					throw new \UnexpectedValueException("Unexpected quotation");
+					throw new \UnexpectedValueException("Unexpected quotation.");
 				} else if (false !== strpos(self::SPECIAL_CHARS, $c)) {
 					break;
 				}
@@ -285,7 +285,7 @@ class DNParser
 		$idx = $offset;
 		$hexstr = $this->_regexMatch('/^(?:[0-9a-f]{2})+/i', $idx);
 		if (null == $hexstr) {
-			throw new \UnexpectedValueException("Invalid hexstring");
+			throw new \UnexpectedValueException("Invalid hexstring.");
 		}
 		$data = hex2bin($hexstr);
 		$offset = $idx;
@@ -303,7 +303,7 @@ class DNParser
 		$idx = $offset;
 		if ($idx >= $this->_len) {
 			throw new \UnexpectedValueException(
-				"Unexpected end of escape sequence");
+				"Unexpected end of escape sequence.");
 		}
 		$c = $this->_dn[$idx++];
 		// special | \ | " | SPACE
@@ -312,7 +312,7 @@ class DNParser
 		} else if ($idx < $this->_len) { // hexpair
 			$val = @hex2bin($c . $this->_dn[$idx++]);
 			if (false === $val) {
-				throw new \UnexpectedValueException("Invalid hexpair");
+				throw new \UnexpectedValueException("Invalid hexpair.");
 			}
 		}
 		$offset = $idx;

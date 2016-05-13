@@ -94,7 +94,7 @@ abstract class AttributeValue
 	 */
 	public static function fromASN1(Element $el) {
 		throw new \BadMethodCallException(
-			"ASN.1 parsing must be implemented in concrete class");
+			"ASN.1 parsing must be implemented in a concrete class.");
 	}
 	
 	/**

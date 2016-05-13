@@ -37,7 +37,7 @@ class Attribute implements \Countable, \IteratorAggregate
 		array_walk($values, 
 			function (AttributeValue $value) use ($type) {
 				if ($value->oid() != $type->oid()) {
-					throw new \LogicException("Attribute OID mismatch");
+					throw new \LogicException("Attribute OID mismatch.");
 				}
 			});
 		$this->_type = $type;
@@ -70,7 +70,7 @@ class Attribute implements \Countable, \IteratorAggregate
 	public static function fromAttributeValues(AttributeValue ...$values) {
 		// we need at least one value to determine OID
 		if (!count($values)) {
-			throw new \LogicException("No values");
+			throw new \LogicException("No values.");
 		}
 		$oid = reset($values)->oid();
 		return new self(new AttributeType($oid), ...$values);
@@ -84,7 +84,7 @@ class Attribute implements \Countable, \IteratorAggregate
 	 */
 	public function first() {
 		if (!count($this->_values)) {
-			throw new \OutOfBoundsException("Attribute contains no values");
+			throw new \OutOfBoundsException("Attribute contains no values.");
 		}
 		return reset($this->_values);
 	}
@@ -129,14 +129,14 @@ class Attribute implements \Countable, \IteratorAggregate
 		$refl = new \ReflectionClass($cls);
 		if (!$refl->isSubclassOf(AttributeValue::class)) {
 			throw new \LogicException(
-				"$cls must be derived from " . AttributeValue::class);
+				"$cls must be derived from " . AttributeValue::class . ".");
 		}
 		$oid = $this->oid();
 		$values = array_map(
 			function (AttributeValue $value) use ($cls, $oid) {
 				$value = $cls::fromSelf($value);
 				if ($value->oid() != $oid) {
-					throw new \LogicException("Attribute OID mismatch");
+					throw new \LogicException("Attribute OID mismatch.");
 				}
 				return $value;
 			}, $this->_values);
