@@ -435,7 +435,11 @@ class AttributeType
 		switch (self::MAP_ATTR_TO_STR_TYPE[$oid]) {
 		case Element::TYPE_PRINTABLE_STRING:
 			return new PrintableString($str);
+		// @codeCoverageIgnoreStart
+		default:
+			// only reachable during development
+			throw new \LogicException();
 		}
-		throw new \LogicException();
+		// @codeCoverageIgnoreEnd
 	}
 }
