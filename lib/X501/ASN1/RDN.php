@@ -122,6 +122,15 @@ class RDN implements \Countable, \IteratorAggregate
 	}
 	
 	/**
+	 * Get all AttributeTypeAndValue objects.
+	 *
+	 * @return AttributeTypeAndValue[]
+	 */
+	public function all() {
+		return $this->_attribs;
+	}
+	
+	/**
 	 *
 	 * @see Countable::count()
 	 * @return int
@@ -139,6 +148,10 @@ class RDN implements \Countable, \IteratorAggregate
 		return new \ArrayIterator($this->_attribs);
 	}
 	
+	/**
+	 *
+	 * @return string
+	 */
 	public function __toString() {
 		return $this->toString();
 	}
