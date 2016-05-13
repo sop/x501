@@ -79,12 +79,12 @@ class Attribute implements \Countable, \IteratorAggregate
 	/**
 	 * Get first value of the attribute.
 	 *
-	 * @throws \OutOfBoundsException
+	 * @throws \LogicException
 	 * @return AttributeValue
 	 */
 	public function first() {
 		if (!count($this->_values)) {
-			throw new \OutOfBoundsException("Attribute contains no values.");
+			throw new \LogicException("Attribute contains no values.");
 		}
 		return reset($this->_values);
 	}
