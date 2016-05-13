@@ -109,6 +109,10 @@ class AttributeTypeAndValue
 		return false;
 	}
 	
+	/**
+	 *
+	 * @return string
+	 */
 	public function __toString() {
 		return $this->toString();
 	}
