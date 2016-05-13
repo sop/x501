@@ -3,6 +3,7 @@
 namespace X501\DN;
 
 use ASN1\Element;
+use ASN1\Exception\DecodeException;
 
 
 /**
@@ -92,8 +93,10 @@ class DNParser
 		$offset = 0;
 		$name = $this->_parseName($offset);
 		if ($offset < $this->_len) {
-			throw new \RuntimeException(
-				"Parser finished before the end of string.");
+			$remains = substr($this->_dn, $offset);
+			throw new \UnexpectedValueException(
+				"Parser finished before the end of string" .
+					 ", remaining: '$remains'.");
 		}
 		return $name;
 	}
@@ -110,16 +113,12 @@ class DNParser
 		$idx = $offset;
 		$names = array();
 		while ($idx < $this->_len) {
-			$name = $this->_parseNameComponent($idx);
-			if (null === $name) {
-				break;
-			}
-			$names[] = $name;
+			$names[] = $this->_parseNameComponent($idx);
 			if ($idx >= $this->_len) {
 				break;
 			}
 			$this->_skipWs($idx);
-			if ($this->_dn[$idx] !== "," && $this->_dn[$idx] !== ";") {
+			if ("," != $this->_dn[$idx] && ";" != $this->_dn[$idx]) {
 				break;
 			}
 			$idx++;
@@ -141,13 +140,9 @@ class DNParser
 		$idx = $offset;
 		$tvpairs = array();
 		while ($idx < $this->_len) {
-			$tvpair = $this->_parseAttrTypeAndValue($idx);
-			if (null === $tvpair) {
-				break;
-			}
-			$tvpairs[] = $tvpair;
+			$tvpairs[] = $this->_parseAttrTypeAndValue($idx);
 			$this->_skipWs($idx);
-			if ($idx >= $this->_len || $this->_dn[$idx] !== "+") {
+			if ($idx >= $this->_len || "+" != $this->_dn[$idx]) {
 				break;
 			}
 			++$idx;
@@ -171,15 +166,20 @@ class DNParser
 		$idx = $offset;
 		$type = $this->_parseAttrType($idx);
 		$this->_skipWs($idx);
-		if ($idx >= $this->_len || $this->_dn[$idx++] !== "=") {
+		if ($idx >= $this->_len || "=" != $this->_dn[$idx++]) {
 			throw new \UnexpectedValueException("Invalid type and value pair.");
 		}
 		$this->_skipWs($idx);
 		// hexstring
-		if ($idx < $this->_len && $this->_dn[$idx] === "#") {
+		if ($idx < $this->_len && "#" == $this->_dn[$idx]) {
 			++$idx;
 			$data = $this->_parseAttrHexValue($idx);
-			$value = Element::fromDER($data);
+			try {
+				$value = Element::fromDER($data);
+			} catch (DecodeException $e) {
+				throw new \UnexpectedValueException(
+					"Invalid DER encoding from hexstring.", 0, $e);
+			}
 		} else {
 			$value = $this->_parseAttrStringValue($idx);
 		}
@@ -193,6 +193,7 @@ class DNParser
 	 * (ALPHA 1*keychar) / oid
 	 *
 	 * @param int $offset
+	 * @throws \UnexpectedValueException
 	 * @return string
 	 */
 	private function _parseAttrType(&$offset) {
@@ -223,15 +224,15 @@ class DNParser
 		if ($idx >= $this->_len) {
 			return $val;
 		}
-		if ($this->_dn[$idx] === '"') { // quoted string
+		if ('"' == $this->_dn[$idx]) { // quoted string
 			++$idx;
 			while ($idx < $this->_len) {
 				$c = $this->_dn[$idx];
-				if ($c === "\\") { // pair
+				if ("\\" == $c) { // pair
 					++$idx;
 					$val .= $this->_parsePairAfterSlash($idx);
 					continue;
-				} else if ($c === '"') {
+				} else if ('"' == $c) {
 					++$idx;
 					break;
 				}
@@ -243,18 +244,18 @@ class DNParser
 			while ($idx < $this->_len) {
 				$c = $this->_dn[$idx];
 				// pair (escape sequence)
-				if ($c === "\\") {
+				if ("\\" == $c) {
 					++$idx;
 					$val .= $this->_parsePairAfterSlash($idx);
 					$wsidx = null;
 					continue;
-				} else if ($c === '"') {
+				} else if ('"' == $c) {
 					throw new \UnexpectedValueException("Unexpected quotation.");
 				} else if (false !== strpos(self::SPECIAL_CHARS, $c)) {
 					break;
 				}
 				// keep track of first consecutive whitespace
-				if ($c === ' ') {
+				if (' ' == $c) {
 					if (null === $wsidx) {
 						$wsidx = $idx;
 					}
@@ -326,7 +327,7 @@ class DNParser
 	 *
 	 * @param string $pattern
 	 * @param int $offset
-	 * @return string
+	 * @return string|null Null if pattern doesn't match
 	 */
 	private function _regexMatch($pattern, &$offset) {
 		$idx = $offset;
@@ -346,7 +347,7 @@ class DNParser
 	private function _skipWs(&$offset) {
 		$idx = $offset;
 		while ($idx < $this->_len) {
-			if ($this->_dn[$idx] !== " ") {
+			if (" " != $this->_dn[$idx]) {
 				break;
 			}
 			++$idx;
