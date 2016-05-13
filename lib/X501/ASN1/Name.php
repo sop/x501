@@ -127,6 +127,15 @@ class Name implements \Countable, \IteratorAggregate
 	}
 	
 	/**
+	 * Get all RDN objects.
+	 *
+	 * @return RDN[]
+	 */
+	public function all() {
+		return $this->_rdns;
+	}
+	
+	/**
 	 *
 	 * @see Countable::count()
 	 * @return int
@@ -144,6 +153,10 @@ class Name implements \Countable, \IteratorAggregate
 		return new \ArrayIterator($this->_rdns);
 	}
 	
+	/**
+	 *
+	 * @return string
+	 */
 	public function __toString() {
 		return $this->toString();
 	}
