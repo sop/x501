@@ -113,7 +113,7 @@ abstract class DirectoryString extends AttributeValue
 				"Type " . Element::tagToName($tag) .
 					 " is not valid DirectoryString.");
 		}
-		return new static($el->str(), $tag);
+		return new static($el->expectType(Element::TYPE_STRING)->string(), $tag);
 	}
 	
 	/**

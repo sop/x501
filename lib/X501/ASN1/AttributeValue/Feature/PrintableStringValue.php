@@ -28,8 +28,8 @@ trait PrintableStringValue
 	 * @return self
 	 */
 	public static function fromASN1(Element $el) {
-		$el->expectType(Element::TYPE_PRINTABLE_STRING);
-		return new self($el->str());
+		return new self(
+			$el->expectType(Element::TYPE_PRINTABLE_STRING)->string());
 	}
 	
 	/**
