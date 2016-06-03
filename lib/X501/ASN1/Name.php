@@ -4,6 +4,7 @@ namespace X501\ASN1;
 
 use ASN1\Element;
 use ASN1\Type\Constructed\Sequence;
+use ASN1\Type\UnspecifiedType;
 use X501\ASN1\AttributeValue\AttributeValue;
 use X501\DN\DNParser;
 
@@ -43,8 +44,8 @@ class Name implements \Countable, \IteratorAggregate
 	 */
 	public static function fromASN1(Sequence $seq) {
 		$rdns = array_map(
-			function (Element $el) {
-				return RDN::fromASN1($el->expectType(Element::TYPE_SET));
+			function (UnspecifiedType $el) {
+				return RDN::fromASN1($el->asSet());
 			}, $seq->elements());
 		return new self(...$rdns);
 	}

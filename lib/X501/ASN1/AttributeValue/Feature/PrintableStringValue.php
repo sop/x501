@@ -3,7 +3,9 @@
 namespace X501\ASN1\AttributeValue\Feature;
 
 use ASN1\Element;
+use ASN1\Feature\ElementBase;
 use ASN1\Type\Primitive\PrintableString;
+use ASN1\Type\UnspecifiedType;
 use X501\ASN1\AttributeValue\AttributeValue;
 use X501\DN\DNParser;
 use X501\MatchingRule\CaseIgnoreMatch;
@@ -24,12 +26,12 @@ trait PrintableStringValue
 	/**
 	 *
 	 * @see AttributeValue::fromASN1
-	 * @param Element $el
+	 * @param ElementBase $el
 	 * @return self
 	 */
-	public static function fromASN1(Element $el) {
-		return new self(
-			$el->expectType(Element::TYPE_PRINTABLE_STRING)->string());
+	public static function fromASN1(ElementBase $el) {
+		$type = new UnspecifiedType($el->asElement());
+		return new self($type->asPrintableString()->string());
 	}
 	
 	/**

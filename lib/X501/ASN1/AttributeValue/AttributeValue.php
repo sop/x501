@@ -3,6 +3,7 @@
 namespace X501\ASN1\AttributeValue;
 
 use ASN1\Element;
+use ASN1\Feature\ElementBase;
 use X501\ASN1\Attribute;
 use X501\ASN1\AttributeType;
 use X501\ASN1\AttributeTypeAndValue;
@@ -89,10 +90,10 @@ abstract class AttributeValue
 	/**
 	 * Initialize from ASN.1.
 	 *
-	 * @param Element $el
+	 * @param ElementBase $el
 	 * @return self
 	 */
-	public static function fromASN1(Element $el) {
+	public static function fromASN1(ElementBase $el) {
 		throw new \BadMethodCallException(
 			"ASN.1 parsing must be implemented in a concrete class.");
 	}
@@ -101,12 +102,12 @@ abstract class AttributeValue
 	 * Initialize from ASN.1 with given OID hint.
 	 *
 	 * @param string $oid Attribute's OID
-	 * @param Element $el
+	 * @param ElementBase $el
 	 * @return self
 	 */
-	public static function fromASN1ByOID($oid, Element $el) {
+	public static function fromASN1ByOID($oid, ElementBase $el) {
 		if (!array_key_exists($oid, self::MAP_OID_TO_CLASS)) {
-			return new UnknownAttributeValue($oid, $el);
+			return new UnknownAttributeValue($oid, $el->asElement());
 		}
 		$cls = self::MAP_OID_TO_CLASS[$oid];
 		return $cls::fromASN1($el);

@@ -2,8 +2,8 @@
 
 namespace X501\ASN1;
 
-use ASN1\Element;
 use ASN1\Type\Constructed\Set;
+use ASN1\Type\UnspecifiedType;
 use X501\ASN1\AttributeValue\AttributeValue;
 
 
@@ -58,9 +58,8 @@ class RDN implements \Countable, \IteratorAggregate
 	 */
 	public static function fromASN1(Set $set) {
 		$attribs = array_map(
-			function (Element $el) {
-				return AttributeTypeAndValue::fromASN1(
-					$el->expectType(Element::TYPE_SEQUENCE));
+			function (UnspecifiedType $el) {
+				return AttributeTypeAndValue::fromASN1($el->asSequence());
 			}, $set->elements());
 		return new self(...$attribs);
 	}

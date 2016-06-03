@@ -43,8 +43,7 @@ class AttributeTypeAndValue
 	 * @return self
 	 */
 	public static function fromASN1(Sequence $seq) {
-		$type = AttributeType::fromASN1(
-			$seq->at(0, Element::TYPE_OBJECT_IDENTIFIER));
+		$type = AttributeType::fromASN1($seq->at(0)->asObjectIdentifier());
 		$value = AttributeValue::fromASN1ByOID($type->oid(), $seq->at(1));
 		return new self($type, $value);
 	}

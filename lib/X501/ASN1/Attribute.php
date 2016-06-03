@@ -2,9 +2,9 @@
 
 namespace X501\ASN1;
 
-use ASN1\Element;
 use ASN1\Type\Constructed\Sequence;
 use ASN1\Type\Constructed\Set;
+use ASN1\Type\UnspecifiedType;
 use X501\ASN1\AttributeValue\AttributeValue;
 use X501\ASN1\Feature\TypedAttribute;
 
@@ -51,12 +51,13 @@ class Attribute implements \Countable, \IteratorAggregate
 	 * @return self
 	 */
 	public static function fromASN1(Sequence $seq) {
-		$type = AttributeType::fromASN1(
-			$seq->at(0, Element::TYPE_OBJECT_IDENTIFIER));
+		$type = AttributeType::fromASN1($seq->at(0)->asObjectIdentifier());
 		$values = array_map(
-			function (Element $el) use ($type) {
+			function (UnspecifiedType $el) use ($type) {
 				return AttributeValue::fromASN1ByOID($type->oid(), $el);
-			}, $seq->at(1, Element::TYPE_SET)->elements());
+			}, $seq->at(1)
+				->asSet()
+				->elements());
 		return new self($type, ...$values);
 	}
 	

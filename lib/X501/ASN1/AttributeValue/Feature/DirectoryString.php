@@ -3,11 +3,13 @@
 namespace X501\ASN1\AttributeValue\Feature;
 
 use ASN1\Element;
+use ASN1\Feature\ElementBase;
 use ASN1\Type\Primitive\BMPString;
 use ASN1\Type\Primitive\PrintableString;
 use ASN1\Type\Primitive\T61String;
 use ASN1\Type\Primitive\UniversalString;
 use ASN1\Type\Primitive\UTF8String;
+use ASN1\Type\UnspecifiedType;
 use X501\ASN1\AttributeValue\AttributeValue;
 use X501\DN\DNParser;
 use X501\MatchingRule\CaseIgnoreMatch;
@@ -102,18 +104,15 @@ abstract class DirectoryString extends AttributeValue
 	
 	/**
 	 *
-	 * @param Element $el
-	 * @throws \UnexpectedValueException
+	 * @see AttributeValue::fromASN1
+	 * @param ElementBase $el
 	 * @return self
 	 */
-	public static function fromASN1(Element $el) {
+	public static function fromASN1(ElementBase $el) {
 		$tag = $el->tag();
-		if (!array_key_exists($tag, self::MAP_TAG_TO_CLASS)) {
-			throw new \UnexpectedValueException(
-				"Type " . Element::tagToName($tag) .
-					 " is not valid DirectoryString.");
-		}
-		return new static($el->expectType(Element::TYPE_STRING)->string(), $tag);
+		self::_tagToASN1Class($tag);
+		$type = new UnspecifiedType($el->asElement());
+		return new static($type->asString()->string(), $tag);
 	}
 	
 	/**
@@ -122,13 +121,24 @@ abstract class DirectoryString extends AttributeValue
 	 * @return Element
 	 */
 	public function toASN1() {
-		if (!array_key_exists($this->_stringTag, self::MAP_TAG_TO_CLASS)) {
+		$cls = self::_tagToASN1Class($this->_stringTag);
+		return new $cls($this->_string);
+	}
+	
+	/**
+	 * Get ASN.1 class name for given DirectoryString type tag.
+	 *
+	 * @param int $tag
+	 * @throws \UnexpectedValueException
+	 * @return string
+	 */
+	private static function _tagToASN1Class($tag) {
+		if (!array_key_exists($tag, self::MAP_TAG_TO_CLASS)) {
 			throw new \UnexpectedValueException(
-				"Type " . Element::tagToName($this->_stringTag) .
+				"Type " . Element::tagToName($tag) .
 					 " is not valid DirectoryString.");
 		}
-		$cls = self::MAP_TAG_TO_CLASS[$this->_stringTag];
-		return new $cls($this->_string);
+		return self::MAP_TAG_TO_CLASS[$tag];
 	}
 	
 	/**
