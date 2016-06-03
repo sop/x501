@@ -285,7 +285,7 @@ class DNParser
 	private function _parseAttrHexValue(&$offset) {
 		$idx = $offset;
 		$hexstr = $this->_regexMatch('/^(?:[0-9a-f]{2})+/i', $idx);
-		if (null == $hexstr) {
+		if (null === $hexstr) {
 			throw new \UnexpectedValueException("Invalid hexstring.");
 		}
 		$data = hex2bin($hexstr);
@@ -310,7 +310,10 @@ class DNParser
 		// special | \ | " | SPACE
 		if (false !== strpos(self::SPECIAL_CHARS . '\\" ', $c)) {
 			$val = $c;
-		} else if ($idx < $this->_len) { // hexpair
+		} else { // hexpair
+			if ($idx >= $this->_len) {
+				throw new \UnexpectedValueException("Unexpected end of hexpair.");
+			}
 			$val = @hex2bin($c . $this->_dn[$idx++]);
 			if (false === $val) {
 				throw new \UnexpectedValueException("Invalid hexpair.");
