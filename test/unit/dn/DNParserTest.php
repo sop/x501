@@ -213,6 +213,13 @@ class DNParserTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException UnexpectedValueException
 	 */
+	public function testUnexpectedHexPairEnd() {
+		DNParser::parseString("cn=\\f");
+	}
+	
+	/**
+	 * @expectedException UnexpectedValueException
+	 */
 	public function testInvalidHexPair() {
 		DNParser::parseString("cn=\\xx");
 	}
