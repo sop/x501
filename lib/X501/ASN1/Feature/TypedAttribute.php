@@ -2,6 +2,8 @@
 
 namespace X501\ASN1\Feature;
 
+use X501\ASN1\AttributeType;
+
 
 /**
  * Trait for attributes having a type.
