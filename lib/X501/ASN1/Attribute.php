@@ -87,7 +87,7 @@ class Attribute implements \Countable, \IteratorAggregate
 		if (!count($this->_values)) {
 			throw new \LogicException("Attribute contains no values.");
 		}
-		return reset($this->_values);
+		return $this->_values[0];
 	}
 	
 	/**
