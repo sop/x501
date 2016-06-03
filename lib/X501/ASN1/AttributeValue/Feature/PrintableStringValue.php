@@ -26,7 +26,7 @@ abstract class PrintableStringValue extends AttributeValue
 	/**
 	 * Constructor
 	 *
-	 * @param string $string String value
+	 * @param string $value String value
 	 */
 	public function __construct($value) {
 		$this->_string = $value;
