@@ -12,9 +12,9 @@ use X501\MatchingRule\CaseIgnoreMatch;
 
 
 /**
- * Trait for attribute values having <i>PrintableString</i> syntax.
+ * Base class for attribute values having <i>PrintableString</i> syntax.
  */
-trait PrintableStringValue
+abstract class PrintableStringValue extends AttributeValue
 {
 	/**
 	 * String value.
@@ -22,6 +22,15 @@ trait PrintableStringValue
 	 * @var string $_string
 	 */
 	protected $_string;
+	
+	/**
+	 * Constructor
+	 *
+	 * @param string $string String value
+	 */
+	public function __construct($value) {
+		$this->_string = $value;
+	}
 	
 	/**
 	 *

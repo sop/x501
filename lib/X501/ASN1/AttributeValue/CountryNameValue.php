@@ -12,12 +12,10 @@ use X501\ASN1\AttributeValue\Feature\PrintableStringValue;
  * @link
  *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2012/SelectedAttributeTypes.html#SelectedAttributeTypes.countryName
  */
-class CountryNameValue extends AttributeValue
+class CountryNameValue extends PrintableStringValue
 {
-	use PrintableStringValue;
-	
 	public function __construct($value) {
 		$this->_oid = AttributeType::OID_COUNTRY_NAME;
-		$this->_string = $value;
+		parent::__construct($value);
 	}
 }
