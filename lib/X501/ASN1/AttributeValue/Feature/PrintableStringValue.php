@@ -31,7 +31,7 @@ trait PrintableStringValue
 	 */
 	public static function fromASN1(ElementBase $el) {
 		$type = new UnspecifiedType($el->asElement());
-		return new self($type->asPrintableString()->string());
+		return new static($type->asPrintableString()->string());
 	}
 	
 	/**
