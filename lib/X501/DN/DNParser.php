@@ -220,56 +220,84 @@ class DNParser
 	 */
 	private function _parseAttrStringValue(&$offset) {
 		$idx = $offset;
-		$val = "";
 		if ($idx >= $this->_len) {
-			return $val;
+			return "";
 		}
 		if ('"' == $this->_dn[$idx]) { // quoted string
-			++$idx;
-			while ($idx < $this->_len) {
-				$c = $this->_dn[$idx];
-				if ("\\" == $c) { // pair
-					++$idx;
-					$val .= $this->_parsePairAfterSlash($idx);
-					continue;
-				} else if ('"' == $c) {
-					++$idx;
-					break;
-				}
-				$val .= $c;
-				++$idx;
-			}
+			$val = $this->_parseQuotedAttrString($idx);
 		} else { // string
-			$wsidx = null;
-			while ($idx < $this->_len) {
-				$c = $this->_dn[$idx];
-				// pair (escape sequence)
-				if ("\\" == $c) {
-					++$idx;
-					$val .= $this->_parsePairAfterSlash($idx);
-					$wsidx = null;
-					continue;
-				} else if ('"' == $c) {
-					throw new \UnexpectedValueException("Unexpected quotation.");
-				} else if (false !== strpos(self::SPECIAL_CHARS, $c)) {
-					break;
-				}
-				// keep track of first consecutive whitespace
-				if (' ' == $c) {
-					if (null === $wsidx) {
-						$wsidx = $idx;
-					}
-				} else {
-					$wsidx = null;
-				}
-				// stringchar
-				$val .= $c;
+			$val = $this->_parseAttrString($idx);
+		}
+		$offset = $idx;
+		return $val;
+	}
+	
+	/**
+	 * Parse plain 'attributeValue' string.
+	 *
+	 * @param int $offset
+	 * @throws \UnexpectedValueException
+	 * @return string
+	 */
+	private function _parseAttrString(&$offset) {
+		$idx = $offset;
+		$val = "";
+		$wsidx = null;
+		while ($idx < $this->_len) {
+			$c = $this->_dn[$idx];
+			// pair (escape sequence)
+			if ("\\" == $c) {
 				++$idx;
+				$val .= $this->_parsePairAfterSlash($idx);
+				$wsidx = null;
+				continue;
+			} else if ('"' == $c) {
+				throw new \UnexpectedValueException("Unexpected quotation.");
+			} else if (false !== strpos(self::SPECIAL_CHARS, $c)) {
+				break;
 			}
-			// if there was non-escaped whitespace in the end of value
-			if (null !== $wsidx) {
-				$val = substr($val, 0, -($idx - $wsidx));
+			// keep track of the first consecutive whitespace
+			if (' ' == $c) {
+				if (null === $wsidx) {
+					$wsidx = $idx;
+				}
+			} else {
+				$wsidx = null;
 			}
+			// stringchar
+			$val .= $c;
+			++$idx;
+		}
+		// if there was non-escaped whitespace in the end of the value
+		if (null !== $wsidx) {
+			$val = substr($val, 0, -($idx - $wsidx));
+		}
+		$offset = $idx;
+		return $val;
+	}
+	
+	/**
+	 * Parse quoted 'attributeValue' string.
+	 *
+	 * @param int $offset Offset to starting quote
+	 * @throws \UnexpectedValueException
+	 * @return string
+	 */
+	private function _parseQuotedAttrString(&$offset) {
+		$idx = $offset + 1;
+		$val = "";
+		while ($idx < $this->_len) {
+			$c = $this->_dn[$idx];
+			if ("\\" == $c) { // pair
+				++$idx;
+				$val .= $this->_parsePairAfterSlash($idx);
+				continue;
+			} else if ('"' == $c) {
+				++$idx;
+				break;
+			}
+			$val .= $c;
+			++$idx;
 		}
 		$offset = $idx;
 		return $val;
