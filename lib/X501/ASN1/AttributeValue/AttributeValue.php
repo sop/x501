@@ -123,7 +123,7 @@ abstract class AttributeValue
 	 * @return self
 	 */
 	public static function fromSelf(self $obj) {
-		return static::fromASN1(new UnspecifiedType($obj->toASN1()));
+		return static::fromASN1($obj->toASN1()->asUnspecified());
 	}
 	
 	/**
