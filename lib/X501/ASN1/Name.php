@@ -70,7 +70,7 @@ class Name implements \Countable, \IteratorAggregate
 					$el = AttributeType::asn1StringForType($type->oid(), $val);
 				}
 				$value = AttributeValue::fromASN1ByOID($type->oid(), 
-					UnspecifiedType::fromElementBase($el));
+					$el->asUnspecified());
 				$attribs[] = new AttributeTypeAndValue($type, $value);
 			}
 			$rdns[] = new RDN(...$attribs);
