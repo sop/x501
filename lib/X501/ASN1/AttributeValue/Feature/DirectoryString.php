@@ -3,7 +3,6 @@
 namespace X501\ASN1\AttributeValue\Feature;
 
 use ASN1\Element;
-use ASN1\Feature\ElementBase;
 use ASN1\Type\Primitive\BMPString;
 use ASN1\Type\Primitive\PrintableString;
 use ASN1\Type\Primitive\T61String;
@@ -105,14 +104,13 @@ abstract class DirectoryString extends AttributeValue
 	/**
 	 *
 	 * @see AttributeValue::fromASN1
-	 * @param ElementBase $el
+	 * @param UnspecifiedType $el
 	 * @return self
 	 */
-	public static function fromASN1(ElementBase $el) {
+	public static function fromASN1(UnspecifiedType $el) {
 		$tag = $el->tag();
 		self::_tagToASN1Class($tag);
-		$type = new UnspecifiedType($el->asElement());
-		return new static($type->asString()->string(), $tag);
+		return new static($el->asString()->string(), $tag);
 	}
 	
 	/**

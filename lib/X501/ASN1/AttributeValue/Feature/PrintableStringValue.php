@@ -3,7 +3,6 @@
 namespace X501\ASN1\AttributeValue\Feature;
 
 use ASN1\Element;
-use ASN1\Feature\ElementBase;
 use ASN1\Type\Primitive\PrintableString;
 use ASN1\Type\UnspecifiedType;
 use X501\ASN1\AttributeValue\AttributeValue;
@@ -35,12 +34,11 @@ abstract class PrintableStringValue extends AttributeValue
 	/**
 	 *
 	 * @see AttributeValue::fromASN1
-	 * @param ElementBase $el
+	 * @param UnspecifiedType $el
 	 * @return self
 	 */
-	public static function fromASN1(ElementBase $el) {
-		$type = new UnspecifiedType($el->asElement());
-		return new static($type->asPrintableString()->string());
+	public static function fromASN1(UnspecifiedType $el) {
+		return new static($el->asPrintableString()->string());
 	}
 	
 	/**
