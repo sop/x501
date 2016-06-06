@@ -2,6 +2,7 @@
 
 use ASN1\Element;
 use ASN1\Type\Primitive\NullType;
+use ASN1\Type\UnspecifiedType;
 use X501\ASN1\AttributeValue\CommonNameValue;
 use X501\ASN1\AttributeValue\Feature\DirectoryString;
 
@@ -16,7 +17,7 @@ class DirectoryStringTest extends PHPUnit_Framework_TestCase
 	 * @expectedException UnexpectedValueException
 	 */
 	public function testFromASN1InvalidType() {
-		DirectoryString::fromASN1(new NullType());
+		DirectoryString::fromASN1(new UnspecifiedType(new NullType()));
 	}
 	
 	/**

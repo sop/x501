@@ -1,6 +1,7 @@
 <?php
 
 use ASN1\Type\Primitive\NullType;
+use ASN1\Type\UnspecifiedType;
 use X501\ASN1\Attribute;
 use X501\ASN1\AttributeTypeAndValue;
 use X501\ASN1\AttributeValue\AttributeValue;
@@ -17,7 +18,7 @@ class AttributeValueTest extends PHPUnit_Framework_TestCase
 	 * @expectedException BadMethodCallException
 	 */
 	public function testFromASN1BadCall() {
-		AttributeValue::fromASN1(new NullType());
+		AttributeValue::fromASN1(new UnspecifiedType(new NullType()));
 	}
 	
 	public function testToAttribute() {

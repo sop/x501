@@ -1,6 +1,7 @@
 <?php
 
 use ASN1\Type\StringType;
+use ASN1\Type\UnspecifiedType;
 use X501\ASN1\AttributeType;
 use X501\ASN1\AttributeValue\AttributeValue;
 use X501\ASN1\AttributeValue\CommonNameValue;
@@ -29,7 +30,7 @@ class ValueInitializationTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreate($cls, $oid) {
 		$el = AttributeType::asn1StringForType($oid, "Test");
-		$val = AttributeValue::fromASN1ByOID($oid, $el);
+		$val = AttributeValue::fromASN1ByOID($oid, new UnspecifiedType($el));
 		$this->assertInstanceOf($cls, $val);
 	}
 	

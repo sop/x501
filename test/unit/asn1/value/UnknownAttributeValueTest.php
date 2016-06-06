@@ -1,6 +1,7 @@
 <?php
 
 use ASN1\Type\Primitive\UTF8String;
+use ASN1\Type\UnspecifiedType;
 use X501\ASN1\AttributeValue\AttributeValue;
 use X501\ASN1\AttributeValue\UnknownAttributeValue;
 
@@ -14,7 +15,8 @@ class UnknownAttributeValueTest extends PHPUnit_Framework_TestCase
 	const OID = "1.3.6.1.3";
 	
 	public function testCreate() {
-		$val = AttributeValue::fromASN1ByOID(self::OID, new UTF8String("Test"));
+		$val = AttributeValue::fromASN1ByOID(self::OID, 
+			new UnspecifiedType(new UTF8String("Test")));
 		$this->assertInstanceOf(UnknownAttributeValue::class, $val);
 		return $val;
 	}
