@@ -89,10 +89,10 @@ class AttributeTypeAndValue
 	/**
 	 * Check whether attribute is semantically equal to other.
 	 *
-	 * @param self $other
+	 * @param AttributeTypeAndValue $other Object to compare to
 	 * @return bool
 	 */
-	public function equals(self $other) {
+	public function equals(AttributeTypeAndValue $other) {
 		// check that attribute types match
 		if ($this->oid() !== $other->oid()) {
 			return false;

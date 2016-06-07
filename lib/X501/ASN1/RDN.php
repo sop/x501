@@ -13,7 +13,8 @@ use X501\ASN1\AttributeValue\AttributeValue;
  * @link
  *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.RelativeDistinguishedName
  */
-class RDN implements \Countable, \IteratorAggregate
+class RDN implements 
+	\Countable, \IteratorAggregate
 {
 	/**
 	 * Attributes.
@@ -95,10 +96,10 @@ class RDN implements \Countable, \IteratorAggregate
 	/**
 	 * Check whether RDN is semantically equal to other.
 	 *
-	 * @param self $other
+	 * @param RDN $other Object to compare to
 	 * @return bool
 	 */
-	public function equals(self $other) {
+	public function equals(RDN $other) {
 		// if attribute count doesn't match
 		if (count($this) != count($other)) {
 			return false;

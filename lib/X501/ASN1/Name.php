@@ -18,7 +18,8 @@ use X501\DN\DNParser;
  * @link
  *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.Name
  */
-class Name implements \Countable, \IteratorAggregate
+class Name implements 
+	\Countable, \IteratorAggregate
 {
 	/**
 	 * Relative distinguished name components.
@@ -110,10 +111,10 @@ class Name implements \Countable, \IteratorAggregate
 	 * Comparison conforms to RFC 4518 string preparation algorithm.
 	 *
 	 * @link https://tools.ietf.org/html/rfc4518
-	 * @param self $other
+	 * @param Name $other Object to compare to
 	 * @return bool
 	 */
-	public function equals(self $other) {
+	public function equals(Name $other) {
 		// if RDN count doesn't match
 		if (count($this) != count($other)) {
 			return false;
