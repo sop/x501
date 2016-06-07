@@ -15,7 +15,8 @@ use X501\ASN1\Feature\TypedAttribute;
  * @link
  *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.Attribute
  */
-class Attribute implements \Countable, \IteratorAggregate
+class Attribute implements 
+	\Countable, \IteratorAggregate
 {
 	use TypedAttribute;
 	
