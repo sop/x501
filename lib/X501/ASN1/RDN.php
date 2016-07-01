@@ -13,8 +13,7 @@ use X501\ASN1\AttributeValue\AttributeValue;
  * @link
  *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.RelativeDistinguishedName
  */
-class RDN implements 
-	\Countable, \IteratorAggregate
+class RDN implements \Countable, \IteratorAggregate
 {
 	/**
 	 * Attributes.
@@ -128,6 +127,57 @@ class RDN implements
 	 */
 	public function all() {
 		return $this->_attribs;
+	}
+	
+	/**
+	 * Get the first AttributeTypeAndValue object in RDN.
+	 *
+	 * @return AttributeTypeAndValue
+	 */
+	public function first() {
+		return $this->_attribs[0];
+	}
+	
+	/**
+	 * Find the first AttributeTypeAndValue object of given OID.
+	 *
+	 * @param string $oid Object identifier in dotted format
+	 * @return AttributeTypeAndValue|null Null if not found
+	 */
+	protected function _findFirstOf($oid) {
+		foreach ($this->_attribs as $attr) {
+			if ($attr->oid() == $oid) {
+				return $attr;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Check whether RDN has an attribute of given type.
+	 *
+	 * @param string $name Attribute name or OID
+	 * @return boolean
+	 */
+	public function has($name) {
+		$oid = AttributeType::attrNameToOID($name);
+		return null !== $this->_findFirstOf($oid);
+	}
+	
+	/**
+	 * Get the first AttributeTypeAndValue object of given attribute type.
+	 *
+	 * @param string $name Attribute name or OID
+	 * @throws \LogicException If attribute doesn't exists
+	 * @return AttributeTypeAndValue
+	 */
+	public function firstOf($name) {
+		$oid = AttributeType::attrNameToOID($name);
+		$tv = $this->_findFirstOf($oid);
+		if (null === $tv) {
+			throw new \LogicException("No '$name' attribute.");
+		}
+		return $tv;
 	}
 	
 	/**

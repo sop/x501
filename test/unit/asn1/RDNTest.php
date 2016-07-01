@@ -89,6 +89,55 @@ class RDNTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @param RDN $rdn
 	 */
+	public function testFirst(RDN $rdn) {
+		$this->assertInstanceOf(AttributeTypeAndValue::class, $rdn->first());
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param RDN $rdn
+	 */
+	public function testHas(RDN $rdn) {
+		$this->assertTrue($rdn->has("name"));
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param RDN $rdn
+	 */
+	public function testHasNot(RDN $rdn) {
+		$this->assertFalse($rdn->has("cn"));
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param RDN $rdn
+	 */
+	public function testFirstOf(RDN $rdn) {
+		$this->assertEquals("one", 
+			$rdn->firstOf("name")
+				->value()
+				->stringValue());
+	}
+	
+	/**
+	 * @depends testCreate
+	 * @expectedException LogicException
+	 *
+	 * @param RDN $rdn
+	 */
+	public function testFirstOfFail(RDN $rdn) {
+		$rdn->firstOf("cn");
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param RDN $rdn
+	 */
 	public function testString(RDN $rdn) {
 		$this->assertEquals("name=one+name=two", $rdn->toString());
 	}
