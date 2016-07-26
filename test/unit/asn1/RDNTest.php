@@ -66,6 +66,34 @@ class RDNTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @param RDN $rdn
 	 */
+	public function testAllOf(RDN $rdn) {
+		$this->assertContainsOnlyInstancesOf(AttributeTypeAndValue::class, 
+			$rdn->allOf("name"));
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param RDN $rdn
+	 */
+	public function testAllOfCount(RDN $rdn) {
+		$this->assertCount(2, $rdn->allOf("name"));
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param RDN $rdn
+	 */
+	public function testAllOfEmpty(RDN $rdn) {
+		$this->assertEmpty($rdn->allOf("cn"));
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param RDN $rdn
+	 */
 	public function testCount(RDN $rdn) {
 		$this->assertCount(2, $rdn);
 	}

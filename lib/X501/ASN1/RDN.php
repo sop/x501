@@ -13,8 +13,7 @@ use X501\ASN1\AttributeValue\AttributeValue;
  * @link
  *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.RelativeDistinguishedName
  */
-class RDN implements 
-	\Countable, \IteratorAggregate
+class RDN implements \Countable, \IteratorAggregate
 {
 	/**
 	 * Attributes.
@@ -128,6 +127,21 @@ class RDN implements
 	 */
 	public function all() {
 		return $this->_attribs;
+	}
+	
+	/**
+	 * Get all AttributeTypeAndValue objects of the given attribute type.
+	 *
+	 * @param string $name Attribute OID or name
+	 * @return AttributeTypeAndValue[]
+	 */
+	public function allOf($name) {
+		$oid = AttributeType::attrNameToOID($name);
+		$attribs = array_filter($this->_attribs, 
+			function (AttributeTypeAndValue $tv) use ($oid) {
+				return $tv->oid() == $oid;
+			});
+		return array_values($attribs);
 	}
 	
 	/**
