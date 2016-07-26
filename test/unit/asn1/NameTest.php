@@ -63,8 +63,54 @@ class NameTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @param Name $name
 	 */
+	public function testFirstValueOf(Name $name) {
+		$this->assertEquals("two", 
+			$name->firstValueOf("name")
+				->stringValue());
+	}
+	
+	/**
+	 * @depends testCreate
+	 * @expectedException RuntimeException
+	 *
+	 * @param Name $name
+	 */
+	public function testFirstValueOfNotFound(Name $name) {
+		$name->firstValueOf("cn");
+	}
+	
+	/**
+	 * @expectedException RuntimeException
+	 */
+	public function testFirstValueOfMultipleFail() {
+		Name::fromString("name=one+name=two")->firstValueOf("name");
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param Name $name
+	 */
 	public function testCount(Name $name) {
 		$this->assertCount(2, $name);
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param Name $name
+	 */
+	public function testCountOfType(Name $name) {
+		$this->assertEquals(2, $name->countOfType("name"));
+	}
+	
+	/**
+	 * @depends testCreate
+	 *
+	 * @param Name $name
+	 */
+	public function testCountOfTypeNone(Name $name) {
+		$this->assertEquals(0, $name->countOfType("cn"));
 	}
 	
 	/**

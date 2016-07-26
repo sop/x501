@@ -18,8 +18,7 @@ use X501\DN\DNParser;
  * @link
  *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.Name
  */
-class Name implements 
-	\Countable, \IteratorAggregate
+class Name implements \Countable, \IteratorAggregate
 {
 	/**
 	 * Relative distinguished name components.
@@ -139,12 +138,53 @@ class Name implements
 	}
 	
 	/**
+	 * Get the first AttributeValue of given type.
+	 *
+	 * Relative name components shall be traversed in encoding order, which is
+	 * reversed in regards to the string representation.
+	 * Multi-valued RDN with multiple attributes of the requested type is
+	 * ambiguous and shall throw an exception.
+	 *
+	 * @param string $name Attribute OID or name
+	 * @throws \RuntimeException If attribute cannot be resolved
+	 * @return AttributeValue
+	 */
+	public function firstValueOf($name) {
+		$oid = AttributeType::attrNameToOID($name);
+		foreach ($this->_rdns as $rdn) {
+			$tvs = $rdn->allOf($oid);
+			if (count($tvs) > 1) {
+				throw new \RangeException("RDN with multiple $name attributes.");
+			}
+			if (1 == count($tvs)) {
+				return $tvs[0]->value();
+			}
+		}
+		throw new \RangeException("Attribute $name not found.");
+	}
+	
+	/**
 	 *
 	 * @see Countable::count()
 	 * @return int
 	 */
 	public function count() {
 		return count($this->_rdns);
+	}
+	
+	/**
+	 * Get the number of attributes of given type.
+	 *
+	 * @param string $name Attribute OID or name
+	 * @return int
+	 */
+	public function countOfType($name) {
+		$oid = AttributeType::attrNameToOID($name);
+		return array_sum(
+			array_map(
+				function (RDN $rdn) use ($oid) {
+					return count($rdn->allOf($oid));
+				}, $this->_rdns));
 	}
 	
 	/**
