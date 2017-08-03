@@ -2,7 +2,6 @@
 
 namespace X501\MatchingRule;
 
-
 /**
  * Implements binary matching rule.
  *
@@ -10,7 +9,12 @@ namespace X501\MatchingRule;
  */
 class BinaryMatch extends MatchingRule
 {
-	public function compare($assertion, $value) {
-		return strcmp($assertion, $value) == 0;
-	}
+    /**
+     *
+     * {@inheritdoc}
+     */
+    public function compare($assertion, $value)
+    {
+        return strcmp($assertion, $value) == 0;
+    }
 }

@@ -2,7 +2,6 @@
 
 namespace X501\MatchingRule;
 
-
 /**
  * Base class for attribute matching rules.
  *
@@ -10,13 +9,13 @@ namespace X501\MatchingRule;
  */
 abstract class MatchingRule
 {
-	/**
-	 * Compare attribute value to assertion.
-	 *
-	 * @param mixed $assertion Value to assert
-	 * @param mixed $value Attribute value
-	 * @return bool|null True if value matches. Null shall be returned if match
-	 *         evaluates to Undefined.
-	 */
-	abstract public function compare($assertion, $value);
+    /**
+     * Compare attribute value to assertion.
+     *
+     * @param mixed $assertion Value to assert
+     * @param mixed $value Attribute value
+     * @return bool|null True if value matches. Null shall be returned if match
+     *         evaluates to Undefined.
+     */
+    abstract public function compare($assertion, $value);
 }

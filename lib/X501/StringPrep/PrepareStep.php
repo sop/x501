@@ -2,20 +2,19 @@
 
 namespace X501\StringPrep;
 
-
 /**
  * Interface for string preparation steps of Internationalized String
  * Preparation algorithm specified by RFC 4518.
- * 
+ *
  * @link https://tools.ietf.org/html/rfc4518#section-2
  */
 interface PrepareStep
 {
-	/**
-	 * Apply string preparation step.
-	 *
-	 * @param string $string String to prepare
-	 * @return string Prepared string
-	 */
-	public function apply($string);
+    /**
+     * Apply string preparation step.
+     *
+     * @param string $string String to prepare
+     * @return string Prepared string
+     */
+    public function apply($string);
 }

@@ -5,7 +5,6 @@ namespace X501\ASN1\AttributeValue;
 use X501\ASN1\AttributeType;
 use X501\ASN1\AttributeValue\Feature\PrintableStringValue;
 
-
 /**
  * 'serialNumber' attribute value
  *
@@ -14,8 +13,14 @@ use X501\ASN1\AttributeValue\Feature\PrintableStringValue;
  */
 class SerialNumberValue extends PrintableStringValue
 {
-	public function __construct($value) {
-		$this->_oid = AttributeType::OID_SERIAL_NUMBER;
-		parent::__construct($value);
-	}
+    /**
+     * Constructor.
+     *
+     * @param string $value String value
+     */
+    public function __construct($value)
+    {
+        $this->_oid = AttributeType::OID_SERIAL_NUMBER;
+        parent::__construct($value);
+    }
 }

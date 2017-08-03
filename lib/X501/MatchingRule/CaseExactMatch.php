@@ -4,7 +4,6 @@ namespace X501\MatchingRule;
 
 use X501\StringPrep\StringPreparer;
 
-
 /**
  * Implements 'caseExactMatch' matching rule.
  *
@@ -12,12 +11,13 @@ use X501\StringPrep\StringPreparer;
  */
 class CaseExactMatch extends StringPrepMatchingRule
 {
-	/**
-	 * Constructor
-	 *
-	 * @param int $string_type ASN.1 string type tag
-	 */
-	public function __construct($string_type) {
-		parent::__construct(StringPreparer::forStringType($string_type));
-	}
+    /**
+     * Constructor.
+     *
+     * @param int $string_type ASN.1 string type tag
+     */
+    public function __construct($string_type)
+    {
+        parent::__construct(StringPreparer::forStringType($string_type));
+    }
 }
