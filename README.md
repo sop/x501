@@ -7,6 +7,13 @@
 
 A PHP library for X.501 ASN.1 types, X.520 attributes and DN parsing.
 
+## Requirements
+
+-   PHP >=7.0
+-   intl
+-   mbstring
+-   [sop/asn1](https://github.com/sop/asn1)
+
 ## Installation
 
 This library is available on
