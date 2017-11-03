@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\StringPrep;
 
 /**
@@ -15,7 +17,7 @@ class NormalizeStep implements PrepareStep
      * @param string $string UTF-8 encoded string
      * @return string
      */
-    public function apply($string)
+    public function apply(string $string): string
     {
         return normalizer_normalize($string, \Normalizer::NFKC);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\StringPrep;
 
 use ASN1\Element;
@@ -25,7 +27,7 @@ class TranscodeStep implements PrepareStep
      *
      * @param int $type ASN.1 type tag of the string
      */
-    public function __construct($type)
+    public function __construct(int $type)
     {
         $this->_type = $type;
     }
@@ -36,7 +38,7 @@ class TranscodeStep implements PrepareStep
      * @param string $string String to prepare
      * @return string UTF-8 encoded string
      */
-    public function apply($string)
+    public function apply(string $string): string
     {
         switch ($this->_type) {
             // UTF-8 string as is

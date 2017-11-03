@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1;
 
 use ASN1\Type\Constructed\Sequence;
@@ -41,7 +43,7 @@ class AttributeTypeAndValue
      * @param Sequence $seq
      * @return self
      */
-    public static function fromASN1(Sequence $seq)
+    public static function fromASN1(Sequence $seq): self
     {
         $type = AttributeType::fromASN1($seq->at(0)->asObjectIdentifier());
         $value = AttributeValue::fromASN1ByOID($type->oid(), $seq->at(1));
@@ -54,7 +56,7 @@ class AttributeTypeAndValue
      * @param AttributeValue $value Attribute value
      * @return self
      */
-    public static function fromAttributeValue(AttributeValue $value)
+    public static function fromAttributeValue(AttributeValue $value): self
     {
         return new self(new AttributeType($value->oid()), $value);
     }
@@ -64,7 +66,7 @@ class AttributeTypeAndValue
      *
      * @return AttributeValue
      */
-    public function value()
+    public function value(): AttributeValue
     {
         return $this->_value;
     }
@@ -74,7 +76,7 @@ class AttributeTypeAndValue
      *
      * @return Sequence
      */
-    public function toASN1()
+    public function toASN1(): Sequence
     {
         return new Sequence($this->_type->toASN1(), $this->_value->toASN1());
     }
@@ -85,7 +87,7 @@ class AttributeTypeAndValue
      * @link https://tools.ietf.org/html/rfc2253#section-2.3
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return $this->_type->typeName() . "=" . $this->_value->rfc2253String();
     }
@@ -96,7 +98,7 @@ class AttributeTypeAndValue
      * @param AttributeTypeAndValue $other Object to compare to
      * @return bool
      */
-    public function equals(AttributeTypeAndValue $other)
+    public function equals(AttributeTypeAndValue $other): bool
     {
         // check that attribute types match
         if ($this->oid() !== $other->oid()) {

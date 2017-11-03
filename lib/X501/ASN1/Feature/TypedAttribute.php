@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1\Feature;
 
 use X501\ASN1\AttributeType;
@@ -21,7 +23,7 @@ trait TypedAttribute
      *
      * @return AttributeType
      */
-    public function type()
+    public function type(): AttributeType
     {
         return $this->_type;
     }
@@ -31,7 +33,7 @@ trait TypedAttribute
      *
      * @return string
      */
-    public function oid()
+    public function oid(): string
     {
         return $this->_type->oid();
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\StringPrep;
 
 /**
@@ -16,5 +18,5 @@ interface PrepareStep
      * @param string $string String to prepare
      * @return string Prepared string
      */
-    public function apply($string);
+    public function apply(string $string): string;
 }

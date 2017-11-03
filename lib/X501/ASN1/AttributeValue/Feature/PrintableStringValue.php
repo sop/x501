@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1\AttributeValue\Feature;
 
 use ASN1\Element;
@@ -26,7 +28,7 @@ abstract class PrintableStringValue extends AttributeValue
      *
      * @param string $value String value
      */
-    public function __construct($value)
+    public function __construct(string $value)
     {
         $this->_string = $value;
     }
@@ -37,7 +39,7 @@ abstract class PrintableStringValue extends AttributeValue
      * @param UnspecifiedType $el
      * @return self
      */
-    public static function fromASN1(UnspecifiedType $el)
+    public static function fromASN1(UnspecifiedType $el): self
     {
         return new static($el->asPrintableString()->string());
     }
@@ -47,7 +49,7 @@ abstract class PrintableStringValue extends AttributeValue
      * @see AttributeValue::toASN1
      * @return PrintableString
      */
-    public function toASN1()
+    public function toASN1(): PrintableString
     {
         return new PrintableString($this->_string);
     }
@@ -57,7 +59,7 @@ abstract class PrintableStringValue extends AttributeValue
      * @see AttributeValue::stringValue
      * @return string
      */
-    public function stringValue()
+    public function stringValue(): string
     {
         return $this->_string;
     }
@@ -78,7 +80,7 @@ abstract class PrintableStringValue extends AttributeValue
      * @see AttributeValue::rfc2253String
      * @return string
      */
-    public function rfc2253String()
+    public function rfc2253String(): string
     {
         return DNParser::escapeString($this->_transcodedString());
     }
@@ -88,7 +90,7 @@ abstract class PrintableStringValue extends AttributeValue
      * @see AttributeValue::_transcodedString
      * @return string
      */
-    protected function _transcodedString()
+    protected function _transcodedString(): string
     {
         // PrintableString maps directly to UTF-8
         return $this->_string;

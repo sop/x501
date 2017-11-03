@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1\AttributeValue;
 
 use X501\ASN1\AttributeType;
@@ -18,7 +20,7 @@ class CountryNameValue extends PrintableStringValue
      *
      * @param string $value String value
      */
-    public function __construct($value)
+    public function __construct(string $value)
     {
         $this->_oid = AttributeType::OID_COUNTRY_NAME;
         parent::__construct($value);

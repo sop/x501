@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1\AttributeValue;
 
 use X501\ASN1\AttributeType;
@@ -19,7 +21,8 @@ class OrganizationalUnitNameValue extends DirectoryString
      * @param string $value String value
      * @param int $string_tag Syntax choice
      */
-    public function __construct($value, $string_tag = DirectoryString::UTF8)
+    public function __construct(string $value,
+        int $string_tag = DirectoryString::UTF8)
     {
         $this->_oid = AttributeType::OID_ORGANIZATIONAL_UNIT_NAME;
         parent::__construct($value, $string_tag);

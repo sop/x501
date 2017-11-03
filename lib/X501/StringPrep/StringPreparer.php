@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\StringPrep;
 
 /**
@@ -39,7 +41,7 @@ class StringPreparer
      * @param int $string_type ASN.1 string type tag.
      * @return self
      */
-    public static function forStringType($string_type)
+    public static function forStringType(int $string_type): self
     {
         $steps = array(
             /* @formatter:off */
@@ -62,7 +64,7 @@ class StringPreparer
      * @param bool $fold True to apply case folding
      * @return self
      */
-    public function withCaseFolding($fold)
+    public function withCaseFolding(bool $fold): self
     {
         $obj = clone $this;
         $obj->_steps[self::STEP_MAP] = new MapStep($fold);
@@ -75,7 +77,7 @@ class StringPreparer
      * @param string $string
      * @return string
      */
-    public function prepare($string)
+    public function prepare(string $string): string
     {
         foreach ($this->_steps as $step) {
             $string = $step->apply($string);

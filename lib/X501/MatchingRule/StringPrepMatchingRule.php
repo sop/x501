@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\MatchingRule;
 
 use X501\StringPrep\StringPreparer;

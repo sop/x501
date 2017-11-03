@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\StringPrep;
 
 /**
@@ -22,7 +24,7 @@ class MapStep implements PrepareStep
      *
      * @param bool $fold_case Whether to apply case folding
      */
-    public function __construct($fold_case = false)
+    public function __construct(bool $fold_case = false)
     {
         $this->_fold = $fold_case;
     }
@@ -32,7 +34,7 @@ class MapStep implements PrepareStep
      * @param string $string UTF-8 encoded string
      * @return string
      */
-    public function apply($string)
+    public function apply(string $string): string
     {
         // @todo Implement character mappings
         if ($this->_fold) {

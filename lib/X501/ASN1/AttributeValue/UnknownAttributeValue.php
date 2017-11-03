@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1\AttributeValue;
 
 use ASN1\Element;
@@ -23,7 +25,7 @@ class UnknownAttributeValue extends AttributeValue
      * @param string $oid
      * @param Element $el
      */
-    public function __construct($oid, Element $el)
+    public function __construct(string $oid, Element $el)
     {
         $this->_oid = $oid;
         $this->_element = $el;
@@ -34,7 +36,7 @@ class UnknownAttributeValue extends AttributeValue
      * @see \X501\ASN1\AttributeValue\AttributeValue::toASN1()
      * @return Element
      */
-    public function toASN1()
+    public function toASN1(): Element
     {
         return $this->_element;
     }
@@ -44,7 +46,7 @@ class UnknownAttributeValue extends AttributeValue
      * @see \X501\ASN1\AttributeValue\AttributeValue::stringValue()
      * @return string
      */
-    public function stringValue()
+    public function stringValue(): string
     {
         // return DER encoding as a hexstring
         return "#" . bin2hex($this->_element->toDER());
@@ -65,7 +67,7 @@ class UnknownAttributeValue extends AttributeValue
      * @see \X501\ASN1\AttributeValue\AttributeValue::rfc2253String()
      * @return string
      */
-    public function rfc2253String()
+    public function rfc2253String(): string
     {
         return $this->stringValue();
     }
@@ -75,7 +77,7 @@ class UnknownAttributeValue extends AttributeValue
      * @see \X501\ASN1\AttributeValue\AttributeValue::_transcodedString()
      * @return string
      */
-    protected function _transcodedString()
+    protected function _transcodedString(): string
     {
         return $this->stringValue();
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1\AttributeValue;
 
 use ASN1\Type\UnspecifiedType;
@@ -59,7 +61,7 @@ abstract class AttributeValue
      *
      * @return string
      */
-    abstract public function stringValue();
+    abstract public function stringValue(): string;
     
     /**
      * Get matching rule for equality comparison.
@@ -74,7 +76,7 @@ abstract class AttributeValue
      * @link https://tools.ietf.org/html/rfc2253#section-2.4
      * @return string
      */
-    abstract public function rfc2253String();
+    abstract public function rfc2253String(): string;
     
     /**
      * Get attribute value as an UTF-8 string conforming to RFC 4518.
@@ -82,7 +84,7 @@ abstract class AttributeValue
      * @link https://tools.ietf.org/html/rfc4518#section-2.1
      * @return string
      */
-    abstract protected function _transcodedString();
+    abstract protected function _transcodedString(): string;
     
     /**
      * Initialize from ASN.1.
@@ -103,7 +105,7 @@ abstract class AttributeValue
      * @param UnspecifiedType $el
      * @return self
      */
-    public static function fromASN1ByOID($oid, UnspecifiedType $el)
+    public static function fromASN1ByOID(string $oid, UnspecifiedType $el): self
     {
         if (!array_key_exists($oid, self::MAP_OID_TO_CLASS)) {
             return new UnknownAttributeValue($oid, $el->asElement());
@@ -121,7 +123,7 @@ abstract class AttributeValue
      * @param self $obj Instance of AttributeValue
      * @return self
      */
-    public static function fromSelf(self $obj)
+    public static function fromSelf(self $obj): self
     {
         return static::fromASN1($obj->toASN1()->asUnspecified());
     }
@@ -131,7 +133,7 @@ abstract class AttributeValue
      *
      * @return string
      */
-    public function oid()
+    public function oid(): string
     {
         return $this->_oid;
     }
@@ -141,7 +143,7 @@ abstract class AttributeValue
      *
      * @return Attribute
      */
-    public function toAttribute()
+    public function toAttribute(): Attribute
     {
         return Attribute::fromAttributeValues($this);
     }
@@ -151,7 +153,7 @@ abstract class AttributeValue
      *
      * @return AttributeTypeAndValue
      */
-    public function toAttributeTypeAndValue()
+    public function toAttributeTypeAndValue(): AttributeTypeAndValue
     {
         return AttributeTypeAndValue::fromAttributeValue($this);
     }

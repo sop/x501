@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\DN;
 
 use ASN1\Element;
@@ -40,7 +42,7 @@ class DNParser
      * @param string $dn
      * @return array
      */
-    public static function parseString($dn)
+    public static function parseString(string $dn): array
     {
         $parser = new self($dn);
         return $parser->parse();
@@ -53,7 +55,7 @@ class DNParser
      * @param string $str
      * @return string
      */
-    public static function escapeString($str)
+    public static function escapeString(string $str): string
     {
         // one of the characters ",", "+", """, "\", "<", ">" or ";"
         $str = preg_replace('/([,\+"\\\<\>;])/u', '\\\\$1', $str);
@@ -79,7 +81,7 @@ class DNParser
      *
      * @param string $dn Distinguised name
      */
-    protected function __construct($dn)
+    protected function __construct(string $dn)
     {
         $this->_dn = $dn;
         $this->_len = strlen($dn);
@@ -91,7 +93,7 @@ class DNParser
      * @throws \RuntimeException
      * @return array
      */
-    protected function parse()
+    protected function parse(): array
     {
         $offset = 0;
         $name = $this->_parseName($offset);
@@ -112,7 +114,7 @@ class DNParser
      * @param int $offset
      * @return array Array of name-components
      */
-    private function _parseName(&$offset)
+    private function _parseName(int &$offset): array
     {
         $idx = $offset;
         $names = array();
@@ -140,7 +142,7 @@ class DNParser
      * @param int $offset
      * @return array Array of [type, value] tuples
      */
-    private function _parseNameComponent(&$offset)
+    private function _parseNameComponent(int &$offset): array
     {
         $idx = $offset;
         $tvpairs = array();
@@ -167,7 +169,7 @@ class DNParser
      * @return array A tuple of [type, value]. Value may be either a string or
      *         an Element, if it's encoded as hexstring.
      */
-    private function _parseAttrTypeAndValue(&$offset)
+    private function _parseAttrTypeAndValue(int &$offset): array
     {
         $idx = $offset;
         $type = $this->_parseAttrType($idx);
@@ -202,7 +204,7 @@ class DNParser
      * @throws \UnexpectedValueException
      * @return string
      */
-    private function _parseAttrType(&$offset)
+    private function _parseAttrType(int &$offset): string
     {
         $idx = $offset;
         // dotted OID
@@ -225,7 +227,7 @@ class DNParser
      * @throws \UnexpectedValueException
      * @return string
      */
-    private function _parseAttrStringValue(&$offset)
+    private function _parseAttrStringValue(int &$offset): string
     {
         $idx = $offset;
         if ($idx >= $this->_len) {
@@ -247,7 +249,7 @@ class DNParser
      * @throws \UnexpectedValueException
      * @return string
      */
-    private function _parseAttrString(&$offset)
+    private function _parseAttrString(int &$offset): string
     {
         $idx = $offset;
         $val = "";
@@ -292,7 +294,7 @@ class DNParser
      * @throws \UnexpectedValueException
      * @return string
      */
-    private function _parseQuotedAttrString(&$offset)
+    private function _parseQuotedAttrString(int &$offset): string
     {
         $idx = $offset + 1;
         $val = "";
@@ -320,7 +322,7 @@ class DNParser
      * @throws \UnexpectedValueException
      * @return string
      */
-    private function _parseAttrHexValue(&$offset)
+    private function _parseAttrHexValue(int &$offset): string
     {
         $idx = $offset;
         $hexstr = $this->_regexMatch('/^(?:[0-9a-f]{2})+/i', $idx);
@@ -339,7 +341,7 @@ class DNParser
      * @throws \UnexpectedValueException
      * @return string
      */
-    private function _parsePairAfterSlash(&$offset)
+    private function _parsePairAfterSlash(int &$offset): string
     {
         $idx = $offset;
         if ($idx >= $this->_len) {
@@ -372,7 +374,7 @@ class DNParser
      * @param int $offset
      * @return string|null Null if pattern doesn't match
      */
-    private function _regexMatch($pattern, &$offset)
+    private function _regexMatch(string $pattern, int &$offset)
     {
         $idx = $offset;
         if (!preg_match($pattern, substr($this->_dn, $idx), $match)) {
@@ -388,7 +390,7 @@ class DNParser
      *
      * @param int $offset
      */
-    private function _skipWs(&$offset)
+    private function _skipWs(int &$offset)
     {
         $idx = $offset;
         while ($idx < $this->_len) {

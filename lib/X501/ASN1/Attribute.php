@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1;
 
 use ASN1\Type\UnspecifiedType;
@@ -50,7 +52,7 @@ class Attribute implements \Countable, \IteratorAggregate
      * @param Sequence $seq
      * @return self
      */
-    public static function fromASN1(Sequence $seq)
+    public static function fromASN1(Sequence $seq): self
     {
         $type = AttributeType::fromASN1($seq->at(0)->asObjectIdentifier());
         $values = array_map(
@@ -69,7 +71,7 @@ class Attribute implements \Countable, \IteratorAggregate
      * @throws \LogicException
      * @return self
      */
-    public static function fromAttributeValues(AttributeValue ...$values)
+    public static function fromAttributeValues(AttributeValue ...$values): self
     {
         // we need at least one value to determine OID
         if (!count($values)) {
@@ -85,7 +87,7 @@ class Attribute implements \Countable, \IteratorAggregate
      * @throws \LogicException
      * @return AttributeValue
      */
-    public function first()
+    public function first(): AttributeValue
     {
         if (!count($this->_values)) {
             throw new \LogicException("Attribute contains no values.");
@@ -98,7 +100,7 @@ class Attribute implements \Countable, \IteratorAggregate
      *
      * @return AttributeValue[]
      */
-    public function values()
+    public function values(): array
     {
         return $this->_values;
     }
@@ -108,7 +110,7 @@ class Attribute implements \Countable, \IteratorAggregate
      *
      * @return Sequence
      */
-    public function toASN1()
+    public function toASN1(): Sequence
     {
         $values = array_map(
             function (AttributeValue $value) {
@@ -131,7 +133,7 @@ class Attribute implements \Countable, \IteratorAggregate
      * @throws \LogicException
      * @return self
      */
-    public function castValues($cls)
+    public function castValues(string $cls): self
     {
         $refl = new \ReflectionClass($cls);
         if (!$refl->isSubclassOf(AttributeValue::class)) {
@@ -155,7 +157,7 @@ class Attribute implements \Countable, \IteratorAggregate
      * @see \Countable::count()
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->_values);
     }
@@ -165,7 +167,7 @@ class Attribute implements \Countable, \IteratorAggregate
      * @see \IteratorAggregate::getIterator()
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->_values);
     }

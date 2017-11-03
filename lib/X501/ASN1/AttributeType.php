@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1;
 
 use ASN1\Element;
+use ASN1\Type\StringType;
 use ASN1\Type\Primitive\ObjectIdentifier;
 use ASN1\Type\Primitive\PrintableString;
 use ASN1\Type\Primitive\UTF8String;
@@ -324,7 +327,7 @@ class AttributeType
      *
      * @param string $oid OID in dotted format.
      */
-    public function __construct($oid)
+    public function __construct(string $oid)
     {
         $this->_oid = $oid;
     }
@@ -335,7 +338,7 @@ class AttributeType
      * @param ObjectIdentifier $oi
      * @return self
      */
-    public static function fromASN1(ObjectIdentifier $oi)
+    public static function fromASN1(ObjectIdentifier $oi): self
     {
         return new self($oi->oid());
     }
@@ -346,7 +349,7 @@ class AttributeType
      * @param string $name
      * @return self
      */
-    public static function fromName($name)
+    public static function fromName(string $name): self
     {
         $oid = self::attrNameToOID($name);
         return new self($oid);
@@ -357,7 +360,7 @@ class AttributeType
      *
      * @return string OID in dotted format
      */
-    public function oid()
+    public function oid(): string
     {
         return $this->_oid;
     }
@@ -367,7 +370,7 @@ class AttributeType
      *
      * @return string
      */
-    public function typeName()
+    public function typeName(): string
     {
         if (array_key_exists($this->_oid, self::MAP_OID_TO_NAME)) {
             return self::MAP_OID_TO_NAME[$this->_oid][0];
@@ -380,7 +383,7 @@ class AttributeType
      *
      * @return ObjectIdentifier
      */
-    public function toASN1()
+    public function toASN1(): ObjectIdentifier
     {
         return new ObjectIdentifier($this->_oid);
     }
@@ -390,7 +393,7 @@ class AttributeType
      *
      * @return array
      */
-    private static function _oidReverseMap()
+    private static function _oidReverseMap(): array
     {
         static $map;
         if (!isset($map)) {
@@ -413,7 +416,7 @@ class AttributeType
      * @throws \OutOfBoundsException
      * @return string OID in dotted format
      */
-    public static function attrNameToOID($name)
+    public static function attrNameToOID(string $name): string
     {
         // if already in OID form
         if (preg_match('/^[0-9]+(?:\.[0-9]+)*$/', $name)) {
@@ -435,7 +438,7 @@ class AttributeType
      * @throws \LogicException
      * @return \ASN1\Type\StringType
      */
-    public static function asn1StringForType($oid, $str)
+    public static function asn1StringForType(string $oid, string $str): StringType
     {
         if (!array_key_exists($oid, self::MAP_ATTR_TO_STR_TYPE)) {
             return new UTF8String($str);

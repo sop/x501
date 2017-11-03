@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1;
 
 use ASN1\Element;
@@ -42,7 +44,7 @@ class Name implements \Countable, \IteratorAggregate
      * @param Sequence $seq
      * @return self
      */
-    public static function fromASN1(Sequence $seq)
+    public static function fromASN1(Sequence $seq): self
     {
         $rdns = array_map(
             function (UnspecifiedType $el) {
@@ -58,7 +60,7 @@ class Name implements \Countable, \IteratorAggregate
      * @param string $str
      * @return self
      */
-    public static function fromString($str)
+    public static function fromString(string $str): self
     {
         $rdns = array();
         foreach (DNParser::parseString($str) as $nameComponent) {
@@ -85,7 +87,7 @@ class Name implements \Countable, \IteratorAggregate
      *
      * @return Sequence
      */
-    public function toASN1()
+    public function toASN1(): Sequence
     {
         $elements = array_map(
             function (RDN $rdn) {
@@ -100,7 +102,7 @@ class Name implements \Countable, \IteratorAggregate
      * @link https://tools.ietf.org/html/rfc2253#section-2.1
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         $parts = array_map(
             function (RDN $rdn) {
@@ -117,7 +119,7 @@ class Name implements \Countable, \IteratorAggregate
      * @param Name $other Object to compare to
      * @return bool
      */
-    public function equals(Name $other)
+    public function equals(Name $other): bool
     {
         // if RDN count doesn't match
         if (count($this) != count($other)) {
@@ -138,7 +140,7 @@ class Name implements \Countable, \IteratorAggregate
      *
      * @return RDN[]
      */
-    public function all()
+    public function all(): array
     {
         return $this->_rdns;
     }
@@ -155,7 +157,7 @@ class Name implements \Countable, \IteratorAggregate
      * @throws \RuntimeException If attribute cannot be resolved
      * @return AttributeValue
      */
-    public function firstValueOf($name)
+    public function firstValueOf(string $name): AttributeValue
     {
         $oid = AttributeType::attrNameToOID($name);
         foreach ($this->_rdns as $rdn) {
@@ -175,7 +177,7 @@ class Name implements \Countable, \IteratorAggregate
      * @see \Countable::count()
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->_rdns);
     }
@@ -186,7 +188,7 @@ class Name implements \Countable, \IteratorAggregate
      * @param string $name Attribute OID or name
      * @return int
      */
-    public function countOfType($name)
+    public function countOfType(string $name): int
     {
         $oid = AttributeType::attrNameToOID($name);
         return array_sum(
@@ -201,7 +203,7 @@ class Name implements \Countable, \IteratorAggregate
      * @see \IteratorAggregate::getIterator()
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->_rdns);
     }

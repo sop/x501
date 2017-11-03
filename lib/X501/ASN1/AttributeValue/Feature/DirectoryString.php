@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1\AttributeValue\Feature;
 
 use ASN1\Element;
@@ -13,6 +15,7 @@ use X501\ASN1\AttributeValue\AttributeValue;
 use X501\DN\DNParser;
 use X501\MatchingRule\CaseIgnoreMatch;
 use X501\StringPrep\TranscodeStep;
+use ASN1\Type\StringType;
 
 /**
  * Base class for attribute values having <i>(Unbounded)DirectoryString</i>
@@ -95,7 +98,7 @@ abstract class DirectoryString extends AttributeValue
      * @param string $value String value
      * @param int $string_tag Syntax choice
      */
-    public function __construct($value, $string_tag)
+    public function __construct(string $value, int $string_tag)
     {
         $this->_string = $value;
         $this->_stringTag = $string_tag;
@@ -107,7 +110,7 @@ abstract class DirectoryString extends AttributeValue
      * @param UnspecifiedType $el
      * @return self
      */
-    public static function fromASN1(UnspecifiedType $el)
+    public static function fromASN1(UnspecifiedType $el): self
     {
         $tag = $el->tag();
         self::_tagToASN1Class($tag);
@@ -119,7 +122,7 @@ abstract class DirectoryString extends AttributeValue
      * @see \X501\ASN1\AttributeValue\AttributeValue::toASN1()
      * @return Element
      */
-    public function toASN1()
+    public function toASN1(): StringType
     {
         $cls = self::_tagToASN1Class($this->_stringTag);
         return new $cls($this->_string);
@@ -132,7 +135,7 @@ abstract class DirectoryString extends AttributeValue
      * @throws \UnexpectedValueException
      * @return string
      */
-    private static function _tagToASN1Class($tag)
+    private static function _tagToASN1Class(int $tag): string
     {
         if (!array_key_exists($tag, self::MAP_TAG_TO_CLASS)) {
             throw new \UnexpectedValueException(
@@ -147,7 +150,7 @@ abstract class DirectoryString extends AttributeValue
      * @see \X501\ASN1\AttributeValue\AttributeValue::stringValue()
      * @return string
      */
-    public function stringValue()
+    public function stringValue(): string
     {
         return $this->_string;
     }
@@ -167,7 +170,7 @@ abstract class DirectoryString extends AttributeValue
      * @see \X501\ASN1\AttributeValue\AttributeValue::rfc2253String()
      * @return string
      */
-    public function rfc2253String()
+    public function rfc2253String(): string
     {
         // TeletexString is encoded as binary
         if ($this->_stringTag == self::TELETEX) {
@@ -181,7 +184,7 @@ abstract class DirectoryString extends AttributeValue
      * @see \X501\ASN1\AttributeValue\AttributeValue::_transcodedString()
      * @return string
      */
-    protected function _transcodedString()
+    protected function _transcodedString(): string
     {
         $step = new TranscodeStep($this->_stringTag);
         return $step->apply($this->_string);

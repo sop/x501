@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\StringPrep;
 
 /**
@@ -17,7 +19,7 @@ class ProhibitStep implements PrepareStep
      * @param string $string UTF-8 encoded string
      * @return string
      */
-    public function apply($string)
+    public function apply(string $string): string
     {
         // @todo Implement
         return $string;

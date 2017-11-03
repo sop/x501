@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace X501\ASN1;
 
 use ASN1\Type\UnspecifiedType;
@@ -41,7 +43,7 @@ class RDN implements \Countable, \IteratorAggregate
      * @param AttributeValue ...$values One or more attributes
      * @return self
      */
-    public static function fromAttributeValues(AttributeValue ...$values)
+    public static function fromAttributeValues(AttributeValue ...$values): self
     {
         $attribs = array_map(
             function (AttributeValue $value) {
@@ -57,7 +59,7 @@ class RDN implements \Countable, \IteratorAggregate
      * @param Set $set
      * @return self
      */
-    public static function fromASN1(Set $set)
+    public static function fromASN1(Set $set): self
     {
         $attribs = array_map(
             function (UnspecifiedType $el) {
@@ -71,7 +73,7 @@ class RDN implements \Countable, \IteratorAggregate
      *
      * @return Set
      */
-    public function toASN1()
+    public function toASN1(): Set
     {
         $elements = array_map(
             function (AttributeTypeAndValue $tv) {
@@ -87,7 +89,7 @@ class RDN implements \Countable, \IteratorAggregate
      * @link https://tools.ietf.org/html/rfc2253#section-2.2
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         $parts = array_map(
             function (AttributeTypeAndValue $tv) {
@@ -102,7 +104,7 @@ class RDN implements \Countable, \IteratorAggregate
      * @param RDN $other Object to compare to
      * @return bool
      */
-    public function equals(RDN $other)
+    public function equals(RDN $other): bool
     {
         // if attribute count doesn't match
         if (count($this) != count($other)) {
@@ -130,7 +132,7 @@ class RDN implements \Countable, \IteratorAggregate
      *
      * @return AttributeTypeAndValue[]
      */
-    public function all()
+    public function all(): array
     {
         return $this->_attribs;
     }
@@ -141,7 +143,7 @@ class RDN implements \Countable, \IteratorAggregate
      * @param string $name Attribute OID or name
      * @return AttributeTypeAndValue[]
      */
-    public function allOf($name)
+    public function allOf(string $name): array
     {
         $oid = AttributeType::attrNameToOID($name);
         $attribs = array_filter($this->_attribs,
@@ -156,7 +158,7 @@ class RDN implements \Countable, \IteratorAggregate
      * @see \Countable::count()
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->_attribs);
     }
@@ -166,7 +168,7 @@ class RDN implements \Countable, \IteratorAggregate
      * @see \IteratorAggregate::getIterator()
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->_attribs);
     }
