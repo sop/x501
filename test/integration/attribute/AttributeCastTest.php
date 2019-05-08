@@ -1,51 +1,52 @@
 <?php
 
-use ASN1\Type\Primitive\UTF8String;
-use X501\ASN1\Attribute;
-use X501\ASN1\AttributeType;
-use X501\ASN1\AttributeValue\CommonNameValue;
-use X501\ASN1\AttributeValue\DescriptionValue;
-use X501\ASN1\AttributeValue\UnknownAttributeValue;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\ASN1\Type\Primitive\UTF8String;
+use Sop\X501\ASN1\Attribute;
+use Sop\X501\ASN1\AttributeType;
+use Sop\X501\ASN1\AttributeValue\CommonNameValue;
+use Sop\X501\ASN1\AttributeValue\DescriptionValue;
+use Sop\X501\ASN1\AttributeValue\UnknownAttributeValue;
 
 /**
  * @group attribute
+ *
+ * @internal
  */
-class AttributeCastTest extends PHPUnit_Framework_TestCase
+class AttributeCastTest extends TestCase
 {
     private static $_attr;
-    
-    public static function setUpBeforeClass()
+
+    public static function setUpBeforeClass(): void
     {
         self::$_attr = new Attribute(
             new AttributeType(AttributeType::OID_COMMON_NAME),
             new UnknownAttributeValue(AttributeType::OID_COMMON_NAME,
-                new UTF8String("name")));
+                new UTF8String('name')));
     }
-    
-    public static function tearDownAfterClass()
+
+    public static function tearDownAfterClass(): void
     {
         self::$_attr = null;
     }
-    
+
     public function testCast()
     {
         $attr = self::$_attr->castValues(CommonNameValue::class);
         $this->assertInstanceOf(CommonNameValue::class, $attr->first());
     }
-    
-    /**
-     * @expectedException LogicException
-     */
+
     public function testInvalidClass()
     {
+        $this->expectException(\LogicException::class);
         self::$_attr->castValues(stdClass::class);
     }
-    
-    /**
-     * @expectedException LogicException
-     */
+
     public function testOIDMismatch()
     {
+        $this->expectException(\LogicException::class);
         self::$_attr->castValues(DescriptionValue::class);
     }
 }

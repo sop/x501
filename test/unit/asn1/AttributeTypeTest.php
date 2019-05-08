@@ -1,20 +1,25 @@
 <?php
 
-use ASN1\Type\Primitive\ObjectIdentifier;
-use X501\ASN1\AttributeType;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\ASN1\Type\Primitive\ObjectIdentifier;
+use Sop\X501\ASN1\AttributeType;
 
 /**
  * @group asn1
+ *
+ * @internal
  */
-class AttributeTypeTest extends PHPUnit_Framework_TestCase
+class AttributeTypeTest extends TestCase
 {
     public function testCreate()
     {
-        $type = AttributeType::fromName("name");
+        $type = AttributeType::fromName('name');
         $this->assertInstanceOf(AttributeType::class, $type);
         return $type;
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -23,10 +28,10 @@ class AttributeTypeTest extends PHPUnit_Framework_TestCase
     public function testEncode(AttributeType $type)
     {
         $der = $type->toASN1()->toDER();
-        $this->assertInternalType("string", $der);
+        $this->assertIsString($der);
         return $der;
     }
-    
+
     /**
      * @depends testEncode
      *
@@ -38,7 +43,7 @@ class AttributeTypeTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(AttributeType::class, $type);
         return $type;
     }
-    
+
     /**
      * @depends testCreate
      * @depends testDecode
@@ -50,7 +55,7 @@ class AttributeTypeTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals($ref, $new);
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -60,7 +65,7 @@ class AttributeTypeTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(AttributeType::OID_NAME, $type->oid());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -68,21 +73,19 @@ class AttributeTypeTest extends PHPUnit_Framework_TestCase
      */
     public function testName(AttributeType $type)
     {
-        $this->assertEquals("name", $type->typeName());
+        $this->assertEquals('name', $type->typeName());
     }
-    
+
     public function testUnknownName()
     {
-        static $oid = "1.3.6.1.3";
+        static $oid = '1.3.6.1.3';
         $type = new AttributeType($oid);
         $this->assertEquals($oid, $type->typeName());
     }
-    
-    /**
-     * @expectedException OutOfBoundsException
-     */
+
     public function testNameToOIDFail()
     {
-        AttributeType::attrNameToOID("unknown");
+        $this->expectException(\OutOfBoundsException::class);
+        AttributeType::attrNameToOID('unknown');
     }
 }

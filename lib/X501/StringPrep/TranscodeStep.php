@@ -2,26 +2,26 @@
 
 declare(strict_types = 1);
 
-namespace X501\StringPrep;
+namespace Sop\X501\StringPrep;
 
-use ASN1\Element;
-use ASN1\Type\Primitive\T61String;
+use Sop\ASN1\Element;
+use Sop\ASN1\Type\Primitive\T61String;
 
 /**
  * Implements 'Transcode' step of the Internationalized String Preparation
  * as specified by RFC 4518.
  *
- * @link https://tools.ietf.org/html/rfc4518#section-2.1
+ * @see https://tools.ietf.org/html/rfc4518#section-2.1
  */
 class TranscodeStep implements PrepareStep
 {
     /**
      * ASN.1 type of the string.
      *
-     * @var int $_type
+     * @var int
      */
     protected $_type;
-    
+
     /**
      * Constructor.
      *
@@ -31,11 +31,12 @@ class TranscodeStep implements PrepareStep
     {
         $this->_type = $type;
     }
-    
+
     /**
+     * @param string $string String to prepare
      *
      * @throws \LogicException If string type is not supported
-     * @param string $string String to prepare
+     *
      * @return string UTF-8 encoded string
      */
     public function apply(string $string): string
@@ -49,17 +50,17 @@ class TranscodeStep implements PrepareStep
                 return $string;
             // UCS-2 to UTF-8
             case Element::TYPE_BMP_STRING:
-                return mb_convert_encoding($string, "UTF-8", "UCS-2BE");
+                return mb_convert_encoding($string, 'UTF-8', 'UCS-2BE');
             // UCS-4 to UTF-8
             case Element::TYPE_UNIVERSAL_STRING:
-                return mb_convert_encoding($string, "UTF-8", "UCS-4BE");
+                return mb_convert_encoding($string, 'UTF-8', 'UCS-4BE');
             // TeletexString mapping is a local matter.
             // We take a shortcut here and encode it as a hexstring.
             case Element::TYPE_T61_STRING:
                 $el = new T61String($string);
-                return "#" . bin2hex($el->toDER());
+                return '#' . bin2hex($el->toDER());
         }
         throw new \LogicException(
-            "Unsupported string type " . Element::tagToName($this->_type) . ".");
+            'Unsupported string type ' . Element::tagToName($this->_type) . '.');
     }
 }

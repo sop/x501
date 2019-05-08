@@ -1,23 +1,28 @@
 <?php
 
-use ASN1\Type\Constructed\Set;
-use X501\ASN1\AttributeTypeAndValue;
-use X501\ASN1\RDN;
-use X501\ASN1\AttributeValue\NameValue;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\ASN1\Type\Constructed\Set;
+use Sop\X501\ASN1\AttributeTypeAndValue;
+use Sop\X501\ASN1\AttributeValue\NameValue;
+use Sop\X501\ASN1\RDN;
 
 /**
  * @group asn1
+ *
+ * @internal
  */
-class RDNTest extends PHPUnit_Framework_TestCase
+class RDNTest extends TestCase
 {
     public function testCreate()
     {
-        $rdn = RDN::fromAttributeValues(new NameValue("one"),
-            new NameValue("two"));
+        $rdn = RDN::fromAttributeValues(new NameValue('one'),
+            new NameValue('two'));
         $this->assertInstanceOf(RDN::class, $rdn);
         return $rdn;
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -26,10 +31,10 @@ class RDNTest extends PHPUnit_Framework_TestCase
     public function testEncode(RDN $rdn)
     {
         $der = $rdn->toASN1()->toDER();
-        $this->assertInternalType("string", $der);
+        $this->assertIsString($der);
         return $der;
     }
-    
+
     /**
      * @depends testEncode
      *
@@ -41,7 +46,7 @@ class RDNTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(RDN::class, $rdn);
         return $rdn;
     }
-    
+
     /**
      * @depends testCreate
      * @depends testDecode
@@ -53,7 +58,7 @@ class RDNTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals($ref, $new);
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -64,7 +69,7 @@ class RDNTest extends PHPUnit_Framework_TestCase
         $this->assertContainsOnlyInstancesOf(AttributeTypeAndValue::class,
             $rdn->all());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -73,9 +78,9 @@ class RDNTest extends PHPUnit_Framework_TestCase
     public function testAllOf(RDN $rdn)
     {
         $this->assertContainsOnlyInstancesOf(AttributeTypeAndValue::class,
-            $rdn->allOf("name"));
+            $rdn->allOf('name'));
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -83,9 +88,9 @@ class RDNTest extends PHPUnit_Framework_TestCase
      */
     public function testAllOfCount(RDN $rdn)
     {
-        $this->assertCount(2, $rdn->allOf("name"));
+        $this->assertCount(2, $rdn->allOf('name'));
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -93,9 +98,9 @@ class RDNTest extends PHPUnit_Framework_TestCase
      */
     public function testAllOfEmpty(RDN $rdn)
     {
-        $this->assertEmpty($rdn->allOf("cn"));
+        $this->assertEmpty($rdn->allOf('cn'));
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -105,7 +110,7 @@ class RDNTest extends PHPUnit_Framework_TestCase
     {
         $this->assertCount(2, $rdn);
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -113,14 +118,14 @@ class RDNTest extends PHPUnit_Framework_TestCase
      */
     public function testIterable(RDN $rdn)
     {
-        $values = array();
+        $values = [];
         foreach ($rdn as $tv) {
             $values[] = $tv;
         }
         $this->assertContainsOnlyInstancesOf(AttributeTypeAndValue::class,
             $values);
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -128,9 +133,9 @@ class RDNTest extends PHPUnit_Framework_TestCase
      */
     public function testString(RDN $rdn)
     {
-        $this->assertEquals("name=one+name=two", $rdn->toString());
+        $this->assertEquals('name=one+name=two', $rdn->toString());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -138,14 +143,12 @@ class RDNTest extends PHPUnit_Framework_TestCase
      */
     public function testToString(RDN $rdn)
     {
-        $this->assertInternalType("string", strval($rdn));
+        $this->assertIsString(strval($rdn));
     }
-    
-    /**
-     * @expectedException UnexpectedValueException
-     */
+
     public function testCreateFail()
     {
+        $this->expectException(\UnexpectedValueException::class);
         new RDN();
     }
 }

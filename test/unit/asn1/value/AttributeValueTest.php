@@ -1,35 +1,38 @@
 <?php
 
-use ASN1\Type\UnspecifiedType;
-use ASN1\Type\Primitive\NullType;
-use X501\ASN1\Attribute;
-use X501\ASN1\AttributeTypeAndValue;
-use X501\ASN1\AttributeValue\AttributeValue;
-use X501\ASN1\AttributeValue\CommonNameValue;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\ASN1\Type\Primitive\NullType;
+use Sop\ASN1\Type\UnspecifiedType;
+use Sop\X501\ASN1\Attribute;
+use Sop\X501\ASN1\AttributeTypeAndValue;
+use Sop\X501\ASN1\AttributeValue\AttributeValue;
+use Sop\X501\ASN1\AttributeValue\CommonNameValue;
 
 /**
  * @group asn1
  * @group value
+ *
+ * @internal
  */
-class AttributeValueTest extends PHPUnit_Framework_TestCase
+class AttributeValueTest extends TestCase
 {
-    /**
-     * @expectedException BadMethodCallException
-     */
     public function testFromASN1BadCall()
     {
+        $this->expectException(\BadMethodCallException::class);
         AttributeValue::fromASN1(new UnspecifiedType(new NullType()));
     }
-    
+
     public function testToAttribute()
     {
-        $val = new CommonNameValue("name");
+        $val = new CommonNameValue('name');
         $this->assertInstanceOf(Attribute::class, $val->toAttribute());
     }
-    
+
     public function testToAttributeTypeAndValue()
     {
-        $val = new CommonNameValue("name");
+        $val = new CommonNameValue('name');
         $this->assertInstanceOf(AttributeTypeAndValue::class,
             $val->toAttributeTypeAndValue());
     }

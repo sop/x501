@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace X501\MatchingRule;
+namespace Sop\X501\MatchingRule;
 
-use X501\StringPrep\StringPreparer;
+use Sop\X501\StringPrep\StringPreparer;
 
 /**
  * Base class for matching rules employing string preparement semantics.
@@ -14,10 +14,10 @@ abstract class StringPrepMatchingRule extends MatchingRule
     /**
      * String preparer.
      *
-     * @var StringPreparer $_prep
+     * @var StringPreparer
      */
     protected $_prep;
-    
+
     /**
      * Constructor.
      *
@@ -27,15 +27,14 @@ abstract class StringPrepMatchingRule extends MatchingRule
     {
         $this->_prep = $preparer;
     }
-    
+
     /**
-     *
      * {@inheritdoc}
      */
-    public function compare($assertion, $value)
+    public function compare($assertion, $value): ?bool
     {
         $assertion = $this->_prep->prepare($assertion);
         $value = $this->_prep->prepare($value);
-        return strcmp($assertion, $value) == 0;
+        return 0 == strcmp($assertion, $value);
     }
 }

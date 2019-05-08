@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace X501\ASN1\Feature;
+namespace Sop\X501\ASN1\Feature;
 
-use X501\ASN1\AttributeType;
+use Sop\X501\ASN1\AttributeType;
 
 /**
  * Trait for attributes having a type.
@@ -14,10 +14,10 @@ trait TypedAttribute
     /**
      * Attribute type.
      *
-     * @var AttributeType $_type
+     * @var AttributeType
      */
     protected $_type;
-    
+
     /**
      * Get attribute type.
      *
@@ -27,7 +27,7 @@ trait TypedAttribute
     {
         return $this->_type;
     }
-    
+
     /**
      * Get OID of the attribute.
      *

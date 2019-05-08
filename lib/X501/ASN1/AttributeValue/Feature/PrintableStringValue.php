@@ -2,14 +2,15 @@
 
 declare(strict_types = 1);
 
-namespace X501\ASN1\AttributeValue\Feature;
+namespace Sop\X501\ASN1\AttributeValue\Feature;
 
-use ASN1\Element;
-use ASN1\Type\UnspecifiedType;
-use ASN1\Type\Primitive\PrintableString;
-use X501\ASN1\AttributeValue\AttributeValue;
-use X501\DN\DNParser;
-use X501\MatchingRule\CaseIgnoreMatch;
+use Sop\ASN1\Element;
+use Sop\ASN1\Type\Primitive\PrintableString;
+use Sop\ASN1\Type\UnspecifiedType;
+use Sop\X501\ASN1\AttributeValue\AttributeValue;
+use Sop\X501\DN\DNParser;
+use Sop\X501\MatchingRule\CaseIgnoreMatch;
+use Sop\X501\MatchingRule\MatchingRule;
 
 /**
  * Base class for attribute values having <i>PrintableString</i> syntax.
@@ -19,12 +20,12 @@ abstract class PrintableStringValue extends AttributeValue
     /**
      * String value.
      *
-     * @var string $_string
+     * @var string
      */
     protected $_string;
-    
+
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $value String value
      */
@@ -32,63 +33,52 @@ abstract class PrintableStringValue extends AttributeValue
     {
         $this->_string = $value;
     }
-    
+
     /**
+     * {@inheritdoc}
      *
-     * @see AttributeValue::fromASN1
-     * @param UnspecifiedType $el
      * @return self
      */
-    public static function fromASN1(UnspecifiedType $el): self
+    public static function fromASN1(UnspecifiedType $el): AttributeValue
     {
         return new static($el->asPrintableString()->string());
     }
-    
+
     /**
-     *
-     * @see AttributeValue::toASN1
-     * @return PrintableString
+     * {@inheritdoc}
      */
-    public function toASN1(): PrintableString
+    public function toASN1(): Element
     {
         return new PrintableString($this->_string);
     }
-    
+
     /**
-     *
-     * @see AttributeValue::stringValue
-     * @return string
+     * {@inheritdoc}
      */
     public function stringValue(): string
     {
         return $this->_string;
     }
-    
+
     /**
-     *
-     * @see AttributeValue::equalityMatchingRule
-     * @return CaseIgnoreMatch
+     * {@inheritdoc}
      */
-    public function equalityMatchingRule()
+    public function equalityMatchingRule(): MatchingRule
     {
         // default to caseIgnoreMatch
         return new CaseIgnoreMatch(Element::TYPE_PRINTABLE_STRING);
     }
-    
+
     /**
-     *
-     * @see AttributeValue::rfc2253String
-     * @return string
+     * {@inheritdoc}
      */
     public function rfc2253String(): string
     {
         return DNParser::escapeString($this->_transcodedString());
     }
-    
+
     /**
-     *
-     * @see AttributeValue::_transcodedString
-     * @return string
+     * {@inheritdoc}
      */
     protected function _transcodedString(): string
     {

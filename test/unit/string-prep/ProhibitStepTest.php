@@ -1,15 +1,20 @@
 <?php
 
-use X501\StringPrep\ProhibitStep;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\X501\StringPrep\ProhibitStep;
 
 /**
  * @group string-prep
+ *
+ * @internal
  */
-class ProhibitStepTest extends PHPUnit_Framework_TestCase
+class ProhibitStepTest extends TestCase
 {
     public function testApply()
     {
-        $str = "Test";
+        $str = 'Test';
         $step = new ProhibitStep();
         $this->assertEquals($str, $step->apply($str));
     }

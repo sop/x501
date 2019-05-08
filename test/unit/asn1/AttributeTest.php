@@ -1,25 +1,30 @@
 <?php
 
-use ASN1\Type\Constructed\Sequence;
-use X501\ASN1\Attribute;
-use X501\ASN1\AttributeType;
-use X501\ASN1\AttributeValue\AttributeValue;
-use X501\ASN1\AttributeValue\CommonNameValue;
-use X501\ASN1\AttributeValue\NameValue;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\ASN1\Type\Constructed\Sequence;
+use Sop\X501\ASN1\Attribute;
+use Sop\X501\ASN1\AttributeType;
+use Sop\X501\ASN1\AttributeValue\AttributeValue;
+use Sop\X501\ASN1\AttributeValue\CommonNameValue;
+use Sop\X501\ASN1\AttributeValue\NameValue;
 
 /**
  * @group asn1
+ *
+ * @internal
  */
-class AttributeTest extends PHPUnit_Framework_TestCase
+class AttributeTest extends TestCase
 {
     public function testCreate()
     {
-        $attr = Attribute::fromAttributeValues(new NameValue("one"),
-            new NameValue("two"));
+        $attr = Attribute::fromAttributeValues(new NameValue('one'),
+            new NameValue('two'));
         $this->assertInstanceOf(Attribute::class, $attr);
         return $attr;
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -28,10 +33,10 @@ class AttributeTest extends PHPUnit_Framework_TestCase
     public function testEncode(Attribute $attr)
     {
         $der = $attr->toASN1()->toDER();
-        $this->assertInternalType("string", $der);
+        $this->assertIsString($der);
         return $der;
     }
-    
+
     /**
      * @depends testEncode
      *
@@ -43,7 +48,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Attribute::class, $attr);
         return $attr;
     }
-    
+
     /**
      * @depends testCreate
      * @depends testDecode
@@ -55,7 +60,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals($ref, $new);
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -63,9 +68,9 @@ class AttributeTest extends PHPUnit_Framework_TestCase
      */
     public function testType(Attribute $attr)
     {
-        $this->assertEquals(AttributeType::fromName("name"), $attr->type());
+        $this->assertEquals(AttributeType::fromName('name'), $attr->type());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -73,10 +78,10 @@ class AttributeTest extends PHPUnit_Framework_TestCase
      */
     public function testFirst(Attribute $attr)
     {
-        $this->assertEquals("one", $attr->first()
+        $this->assertEquals('one', $attr->first()
             ->rfc2253String());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -87,7 +92,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase
         $this->assertContainsOnlyInstancesOf(AttributeValue::class,
             $attr->values());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -97,7 +102,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase
     {
         $this->assertCount(2, $attr);
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -105,45 +110,41 @@ class AttributeTest extends PHPUnit_Framework_TestCase
      */
     public function testIterable(Attribute $attr)
     {
-        $values = array();
+        $values = [];
         foreach ($attr as $value) {
             $values[] = $value;
         }
         $this->assertContainsOnlyInstancesOf(AttributeValue::class, $values);
     }
-    
-    /**
-     * @expectedException LogicException
-     */
+
     public function testCreateMismatch()
     {
-        Attribute::fromAttributeValues(new NameValue("name"),
-            new CommonNameValue("cn"));
+        $this->expectException(\LogicException::class);
+        Attribute::fromAttributeValues(new NameValue('name'),
+            new CommonNameValue('cn'));
     }
-    
-    /**
-     * @expectedException LogicException
-     */
+
     public function testEmptyFromValuesFail()
     {
+        $this->expectException(\LogicException::class);
         Attribute::fromAttributeValues();
     }
-    
+
     public function testCreateEmpty()
     {
-        $attr = new Attribute(AttributeType::fromName("cn"));
+        $attr = new Attribute(AttributeType::fromName('cn'));
         $this->assertInstanceOf(Attribute::class, $attr);
         return $attr;
     }
-    
+
     /**
      * @depends testCreateEmpty
-     * @expectedException LogicException
      *
      * @param Attribute $attr
      */
     public function testEmptyFirstFail(Attribute $attr)
     {
+        $this->expectException(\LogicException::class);
         $attr->first();
     }
 }

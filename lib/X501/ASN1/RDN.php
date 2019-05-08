@@ -2,27 +2,26 @@
 
 declare(strict_types = 1);
 
-namespace X501\ASN1;
+namespace Sop\X501\ASN1;
 
-use ASN1\Type\UnspecifiedType;
-use ASN1\Type\Constructed\Set;
-use X501\ASN1\AttributeValue\AttributeValue;
+use Sop\ASN1\Type\Constructed\Set;
+use Sop\ASN1\Type\UnspecifiedType;
+use Sop\X501\ASN1\AttributeValue\AttributeValue;
 
 /**
  * Implements <i>RelativeDistinguishedName</i> ASN.1 type.
  *
- * @link
- *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.RelativeDistinguishedName
+ * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.RelativeDistinguishedName
  */
 class RDN implements \Countable, \IteratorAggregate
 {
     /**
      * Attributes.
      *
-     * @var AttributeTypeAndValue[] $_attribs
+     * @var AttributeTypeAndValue[]
      */
     protected $_attribs;
-    
+
     /**
      * Constructor.
      *
@@ -32,15 +31,24 @@ class RDN implements \Countable, \IteratorAggregate
     {
         if (!count($attribs)) {
             throw new \UnexpectedValueException(
-                "RDN must have at least one AttributeTypeAndValue.");
+                'RDN must have at least one AttributeTypeAndValue.');
         }
         $this->_attribs = $attribs;
     }
-    
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
     /**
      * Convenience method to initialize RDN from AttributeValue objects.
      *
      * @param AttributeValue ...$values One or more attributes
+     *
      * @return self
      */
     public static function fromAttributeValues(AttributeValue ...$values): self
@@ -52,11 +60,12 @@ class RDN implements \Countable, \IteratorAggregate
             }, $values);
         return new self(...$attribs);
     }
-    
+
     /**
      * Initialize from ASN.1.
      *
      * @param Set $set
+     *
      * @return self
      */
     public static function fromASN1(Set $set): self
@@ -67,7 +76,7 @@ class RDN implements \Countable, \IteratorAggregate
             }, $set->elements());
         return new self(...$attribs);
     }
-    
+
     /**
      * Generate ASN.1 structure.
      *
@@ -82,11 +91,12 @@ class RDN implements \Countable, \IteratorAggregate
         $set = new Set(...$elements);
         return $set->sortedSetOf();
     }
-    
+
     /**
      * Get name-component string conforming to RFC 2253.
      *
-     * @link https://tools.ietf.org/html/rfc2253#section-2.2
+     * @see https://tools.ietf.org/html/rfc2253#section-2.2
+     *
      * @return string
      */
     public function toString(): string
@@ -95,13 +105,14 @@ class RDN implements \Countable, \IteratorAggregate
             function (AttributeTypeAndValue $tv) {
                 return $tv->toString();
             }, $this->_attribs);
-        return implode("+", $parts);
+        return implode('+', $parts);
     }
-    
+
     /**
      * Check whether RDN is semantically equal to other.
      *
      * @param RDN $other Object to compare to
+     *
      * @return bool
      */
     public function equals(RDN $other): bool
@@ -126,7 +137,7 @@ class RDN implements \Countable, \IteratorAggregate
         }
         return true;
     }
-    
+
     /**
      * Get all AttributeTypeAndValue objects.
      *
@@ -136,11 +147,12 @@ class RDN implements \Countable, \IteratorAggregate
     {
         return $this->_attribs;
     }
-    
+
     /**
      * Get all AttributeTypeAndValue objects of the given attribute type.
      *
      * @param string $name Attribute OID or name
+     *
      * @return AttributeTypeAndValue[]
      */
     public function allOf(string $name): array
@@ -152,33 +164,24 @@ class RDN implements \Countable, \IteratorAggregate
             });
         return array_values($attribs);
     }
-    
+
     /**
-     *
      * @see \Countable::count()
+     *
      * @return int
      */
     public function count(): int
     {
         return count($this->_attribs);
     }
-    
+
     /**
-     *
      * @see \IteratorAggregate::getIterator()
+     *
      * @return \ArrayIterator
      */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->_attribs);
-    }
-    
-    /**
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->toString();
     }
 }

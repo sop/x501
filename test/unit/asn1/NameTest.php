@@ -1,21 +1,26 @@
 <?php
 
-use ASN1\Type\Constructed\Sequence;
-use X501\ASN1\Name;
-use X501\ASN1\RDN;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\ASN1\Type\Constructed\Sequence;
+use Sop\X501\ASN1\Name;
+use Sop\X501\ASN1\RDN;
 
 /**
  * @group asn1
+ *
+ * @internal
  */
-class NameTest extends PHPUnit_Framework_TestCase
+class NameTest extends TestCase
 {
     public function testCreate()
     {
-        $name = Name::fromString("name=one,name=two");
+        $name = Name::fromString('name=one,name=two');
         $this->assertInstanceOf(Name::class, $name);
         return $name;
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -24,10 +29,10 @@ class NameTest extends PHPUnit_Framework_TestCase
     public function testEncode(Name $name)
     {
         $der = $name->toASN1()->toDER();
-        $this->assertInternalType("string", $der);
+        $this->assertIsString($der);
         return $der;
     }
-    
+
     /**
      * @depends testEncode
      *
@@ -39,7 +44,7 @@ class NameTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Name::class, $name);
         return $name;
     }
-    
+
     /**
      * @depends testCreate
      * @depends testDecode
@@ -51,7 +56,7 @@ class NameTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals($ref, $new);
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -61,7 +66,7 @@ class NameTest extends PHPUnit_Framework_TestCase
     {
         $this->assertContainsOnlyInstancesOf(RDN::class, $name->all());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -69,30 +74,28 @@ class NameTest extends PHPUnit_Framework_TestCase
      */
     public function testFirstValueOf(Name $name)
     {
-        $this->assertEquals("two",
-            $name->firstValueOf("name")
+        $this->assertEquals('two',
+            $name->firstValueOf('name')
                 ->stringValue());
     }
-    
+
     /**
      * @depends testCreate
-     * @expectedException RuntimeException
      *
      * @param Name $name
      */
     public function testFirstValueOfNotFound(Name $name)
     {
-        $name->firstValueOf("cn");
+        $this->expectException(\RuntimeException::class);
+        $name->firstValueOf('cn');
     }
-    
-    /**
-     * @expectedException RuntimeException
-     */
+
     public function testFirstValueOfMultipleFail()
     {
-        Name::fromString("name=one+name=two")->firstValueOf("name");
+        $this->expectException(\RuntimeException::class);
+        Name::fromString('name=one+name=two')->firstValueOf('name');
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -102,7 +105,7 @@ class NameTest extends PHPUnit_Framework_TestCase
     {
         $this->assertCount(2, $name);
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -110,9 +113,9 @@ class NameTest extends PHPUnit_Framework_TestCase
      */
     public function testCountOfType(Name $name)
     {
-        $this->assertEquals(2, $name->countOfType("name"));
+        $this->assertEquals(2, $name->countOfType('name'));
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -120,9 +123,9 @@ class NameTest extends PHPUnit_Framework_TestCase
      */
     public function testCountOfTypeNone(Name $name)
     {
-        $this->assertEquals(0, $name->countOfType("cn"));
+        $this->assertEquals(0, $name->countOfType('cn'));
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -130,13 +133,13 @@ class NameTest extends PHPUnit_Framework_TestCase
      */
     public function testIterable(Name $name)
     {
-        $values = array();
+        $values = [];
         foreach ($name as $rdn) {
             $values[] = $rdn;
         }
         $this->assertContainsOnlyInstancesOf(RDN::class, $values);
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -144,9 +147,9 @@ class NameTest extends PHPUnit_Framework_TestCase
      */
     public function testString(Name $name)
     {
-        $this->assertEquals("name=one,name=two", $name->toString());
+        $this->assertEquals('name=one,name=two', $name->toString());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -154,6 +157,6 @@ class NameTest extends PHPUnit_Framework_TestCase
      */
     public function testToString(Name $name)
     {
-        $this->assertInternalType("string", strval($name));
+        $this->assertIsString(strval($name));
     }
 }

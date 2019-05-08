@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace X501\ASN1;
+namespace Sop\X501\ASN1;
 
-use ASN1\Element;
-use ASN1\Type\UnspecifiedType;
-use ASN1\Type\Constructed\Sequence;
-use X501\ASN1\AttributeValue\AttributeValue;
-use X501\DN\DNParser;
+use Sop\ASN1\Element;
+use Sop\ASN1\Type\Constructed\Sequence;
+use Sop\ASN1\Type\UnspecifiedType;
+use Sop\X501\ASN1\AttributeValue\AttributeValue;
+use Sop\X501\DN\DNParser;
 
 /**
  * Implements <i>Name</i> ASN.1 type.
@@ -16,18 +16,17 @@ use X501\DN\DNParser;
  * Since <i>Name</i> is a CHOICE only supporting <i>RDNSequence</i> type,
  * this class implements <i>RDNSequence</i> semantics as well.
  *
- * @link
- *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.Name
+ * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.Name
  */
 class Name implements \Countable, \IteratorAggregate
 {
     /**
      * Relative distinguished name components.
      *
-     * @var RDN[] $_rdns
+     * @var RDN[]
      */
     protected $_rdns;
-    
+
     /**
      * Constructor.
      *
@@ -37,11 +36,20 @@ class Name implements \Countable, \IteratorAggregate
     {
         $this->_rdns = $rdns;
     }
-    
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
     /**
      * Initialize from ASN.1.
      *
      * @param Sequence $seq
+     *
      * @return self
      */
     public static function fromASN1(Sequence $seq): self
@@ -52,20 +60,22 @@ class Name implements \Countable, \IteratorAggregate
             }, $seq->elements());
         return new self(...$rdns);
     }
-    
+
     /**
      * Initialize from distinguished name string.
      *
-     * @link https://tools.ietf.org/html/rfc1779
+     * @see https://tools.ietf.org/html/rfc1779
+     *
      * @param string $str
+     *
      * @return self
      */
     public static function fromString(string $str): self
     {
-        $rdns = array();
+        $rdns = [];
         foreach (DNParser::parseString($str) as $nameComponent) {
-            $attribs = array();
-            foreach ($nameComponent as list($name, $val)) {
+            $attribs = [];
+            foreach ($nameComponent as [$name, $val]) {
                 $type = AttributeType::fromName($name);
                 // hexstrings are parsed to ASN.1 elements
                 if ($val instanceof Element) {
@@ -81,7 +91,7 @@ class Name implements \Countable, \IteratorAggregate
         }
         return new self(...$rdns);
     }
-    
+
     /**
      * Generate ASN.1 structure.
      *
@@ -95,11 +105,12 @@ class Name implements \Countable, \IteratorAggregate
             }, $this->_rdns);
         return new Sequence(...$elements);
     }
-    
+
     /**
      * Get distinguised name string conforming to RFC 2253.
      *
-     * @link https://tools.ietf.org/html/rfc2253#section-2.1
+     * @see https://tools.ietf.org/html/rfc2253#section-2.1
+     *
      * @return string
      */
     public function toString(): string
@@ -108,15 +119,18 @@ class Name implements \Countable, \IteratorAggregate
             function (RDN $rdn) {
                 return $rdn->toString();
             }, array_reverse($this->_rdns));
-        return implode(",", $parts);
+        return implode(',', $parts);
     }
-    
+
     /**
      * Whether name is semantically equal to other.
+     *
      * Comparison conforms to RFC 4518 string preparation algorithm.
      *
-     * @link https://tools.ietf.org/html/rfc4518
+     * @see https://tools.ietf.org/html/rfc4518
+     *
      * @param Name $other Object to compare to
+     *
      * @return bool
      */
     public function equals(Name $other): bool
@@ -134,7 +148,7 @@ class Name implements \Countable, \IteratorAggregate
         }
         return true;
     }
-    
+
     /**
      * Get all RDN objects.
      *
@@ -144,7 +158,7 @@ class Name implements \Countable, \IteratorAggregate
     {
         return $this->_rdns;
     }
-    
+
     /**
      * Get the first AttributeValue of given type.
      *
@@ -154,7 +168,9 @@ class Name implements \Countable, \IteratorAggregate
      * ambiguous and shall throw an exception.
      *
      * @param string $name Attribute OID or name
+     *
      * @throws \RuntimeException If attribute cannot be resolved
+     *
      * @return AttributeValue
      */
     public function firstValueOf(string $name): AttributeValue
@@ -163,29 +179,30 @@ class Name implements \Countable, \IteratorAggregate
         foreach ($this->_rdns as $rdn) {
             $tvs = $rdn->allOf($oid);
             if (count($tvs) > 1) {
-                throw new \RangeException("RDN with multiple $name attributes.");
+                throw new \RangeException("RDN with multiple {$name} attributes.");
             }
             if (1 == count($tvs)) {
                 return $tvs[0]->value();
             }
         }
-        throw new \RangeException("Attribute $name not found.");
+        throw new \RangeException("Attribute {$name} not found.");
     }
-    
+
     /**
-     *
      * @see \Countable::count()
+     *
      * @return int
      */
     public function count(): int
     {
         return count($this->_rdns);
     }
-    
+
     /**
      * Get the number of attributes of given type.
      *
      * @param string $name Attribute OID or name
+     *
      * @return int
      */
     public function countOfType(string $name): int
@@ -197,23 +214,14 @@ class Name implements \Countable, \IteratorAggregate
                     return count($rdn->allOf($oid));
                 }, $this->_rdns));
     }
-    
+
     /**
-     *
      * @see \IteratorAggregate::getIterator()
+     *
      * @return \ArrayIterator
      */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->_rdns);
-    }
-    
-    /**
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->toString();
     }
 }

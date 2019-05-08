@@ -1,26 +1,31 @@
 <?php
 
-use ASN1\Type\UnspecifiedType;
-use ASN1\Type\Primitive\UTF8String;
-use X501\ASN1\AttributeValue\AttributeValue;
-use X501\ASN1\AttributeValue\UnknownAttributeValue;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\ASN1\Type\Primitive\UTF8String;
+use Sop\ASN1\Type\UnspecifiedType;
+use Sop\X501\ASN1\AttributeValue\AttributeValue;
+use Sop\X501\ASN1\AttributeValue\UnknownAttributeValue;
 
 /**
  * @group asn1
  * @group value
+ *
+ * @internal
  */
-class UnknownAttributeValueTest extends PHPUnit_Framework_TestCase
+class UnknownAttributeValueTest extends TestCase
 {
-    const OID = "1.3.6.1.3";
-    
+    const OID = '1.3.6.1.3';
+
     public function testCreate()
     {
         $val = AttributeValue::fromASN1ByOID(self::OID,
-            new UnspecifiedType(new UTF8String("Test")));
+            new UnspecifiedType(new UTF8String('Test')));
         $this->assertInstanceOf(UnknownAttributeValue::class, $val);
         return $val;
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -30,7 +35,7 @@ class UnknownAttributeValueTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(self::OID, $val->oid());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -40,7 +45,7 @@ class UnknownAttributeValueTest extends PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(UTF8String::class, $val->toASN1());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -48,9 +53,9 @@ class UnknownAttributeValueTest extends PHPUnit_Framework_TestCase
      */
     public function testString(AttributeValue $val)
     {
-        $this->assertEquals("#0c04" . bin2hex("Test"), $val->rfc2253String());
+        $this->assertEquals('#0c04' . bin2hex('Test'), $val->rfc2253String());
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -58,6 +63,6 @@ class UnknownAttributeValueTest extends PHPUnit_Framework_TestCase
      */
     public function testToString(AttributeValue $val)
     {
-        $this->assertInternalType("string", strval($val));
+        $this->assertIsString(strval($val));
     }
 }

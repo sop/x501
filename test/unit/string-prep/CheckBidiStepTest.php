@@ -1,15 +1,20 @@
 <?php
 
-use X501\StringPrep\CheckBidiStep;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\X501\StringPrep\CheckBidiStep;
 
 /**
  * @group string-prep
+ *
+ * @internal
  */
-class CheckBidiStepTest extends PHPUnit_Framework_TestCase
+class CheckBidiStepTest extends TestCase
 {
     public function testApply()
     {
-        $str = "Test";
+        $str = 'Test';
         $step = new CheckBidiStep();
         $this->assertEquals($str, $step->apply($str));
     }

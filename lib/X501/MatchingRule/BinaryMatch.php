@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace X501\MatchingRule;
+namespace Sop\X501\MatchingRule;
 
 /**
  * Implements binary matching rule.
@@ -12,11 +12,10 @@ namespace X501\MatchingRule;
 class BinaryMatch extends MatchingRule
 {
     /**
-     *
      * {@inheritdoc}
      */
-    public function compare($assertion, $value)
+    public function compare($assertion, $value): ?bool
     {
-        return strcmp($assertion, $value) == 0;
+        return 0 == strcmp($assertion, $value);
     }
 }

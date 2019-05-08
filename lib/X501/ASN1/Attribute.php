@@ -2,35 +2,34 @@
 
 declare(strict_types = 1);
 
-namespace X501\ASN1;
+namespace Sop\X501\ASN1;
 
-use ASN1\Type\UnspecifiedType;
-use ASN1\Type\Constructed\Sequence;
-use ASN1\Type\Constructed\Set;
-use X501\ASN1\AttributeValue\AttributeValue;
-use X501\ASN1\Feature\TypedAttribute;
+use Sop\ASN1\Type\Constructed\Sequence;
+use Sop\ASN1\Type\Constructed\Set;
+use Sop\ASN1\Type\UnspecifiedType;
+use Sop\X501\ASN1\AttributeValue\AttributeValue;
+use Sop\X501\ASN1\Feature\TypedAttribute;
 
 /**
  * Implements <i>Attribute</i> ASN.1 type.
  *
- * @link
- *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.Attribute
+ * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.Attribute
  */
 class Attribute implements \Countable, \IteratorAggregate
 {
     use TypedAttribute;
-    
+
     /**
      * Attribute values.
      *
      * @var AttributeValue[]
      */
     protected $_values;
-    
+
     /**
      * Constructor.
      *
-     * @param AttributeType $type Attribute type
+     * @param AttributeType  $type      Attribute type
      * @param AttributeValue ...$values Attribute values
      */
     public function __construct(AttributeType $type, AttributeValue ...$values)
@@ -39,17 +38,18 @@ class Attribute implements \Countable, \IteratorAggregate
         array_walk($values,
             function (AttributeValue $value) use ($type) {
                 if ($value->oid() != $type->oid()) {
-                    throw new \LogicException("Attribute OID mismatch.");
+                    throw new \LogicException('Attribute OID mismatch.');
                 }
             });
         $this->_type = $type;
         $this->_values = $values;
     }
-    
+
     /**
      * Initialize from ASN.1.
      *
      * @param Sequence $seq
+     *
      * @return self
      */
     public static function fromASN1(Sequence $seq): self
@@ -63,38 +63,41 @@ class Attribute implements \Countable, \IteratorAggregate
                 ->elements());
         return new self($type, ...$values);
     }
-    
+
     /**
      * Convenience method to initialize from attribute values.
      *
      * @param AttributeValue ...$values One or more values
+     *
      * @throws \LogicException
+     *
      * @return self
      */
     public static function fromAttributeValues(AttributeValue ...$values): self
     {
         // we need at least one value to determine OID
         if (!count($values)) {
-            throw new \LogicException("No values.");
+            throw new \LogicException('No values.');
         }
         $oid = reset($values)->oid();
         return new self(new AttributeType($oid), ...$values);
     }
-    
+
     /**
      * Get first value of the attribute.
      *
      * @throws \LogicException
+     *
      * @return AttributeValue
      */
     public function first(): AttributeValue
     {
         if (!count($this->_values)) {
-            throw new \LogicException("Attribute contains no values.");
+            throw new \LogicException('Attribute contains no values.');
         }
         return $this->_values[0];
     }
-    
+
     /**
      * Get all values.
      *
@@ -104,7 +107,7 @@ class Attribute implements \Countable, \IteratorAggregate
     {
         return $this->_values;
     }
-    
+
     /**
      * Generate ASN.1 structure.
      *
@@ -119,7 +122,7 @@ class Attribute implements \Countable, \IteratorAggregate
         $valueset = new Set(...$values);
         return new Sequence($this->_type->toASN1(), $valueset->sortedSetOf());
     }
-    
+
     /**
      * Cast attribute values to another AttributeValue class.
      *
@@ -130,7 +133,9 @@ class Attribute implements \Countable, \IteratorAggregate
      * as current attribute values.
      *
      * @param string $cls AttributeValue class name
+     *
      * @throws \LogicException
+     *
      * @return self
      */
     public function castValues(string $cls): self
@@ -138,33 +143,33 @@ class Attribute implements \Countable, \IteratorAggregate
         $refl = new \ReflectionClass($cls);
         if (!$refl->isSubclassOf(AttributeValue::class)) {
             throw new \LogicException(
-                "$cls must be derived from " . AttributeValue::class . ".");
+                "{$cls} must be derived from " . AttributeValue::class . '.');
         }
         $oid = $this->oid();
         $values = array_map(
             function (AttributeValue $value) use ($cls, $oid) {
                 $value = $cls::fromSelf($value);
                 if ($value->oid() != $oid) {
-                    throw new \LogicException("Attribute OID mismatch.");
+                    throw new \LogicException('Attribute OID mismatch.');
                 }
                 return $value;
             }, $this->_values);
         return self::fromAttributeValues(...$values);
     }
-    
+
     /**
-     *
      * @see \Countable::count()
+     *
      * @return int
      */
     public function count(): int
     {
         return count($this->_values);
     }
-    
+
     /**
-     *
      * @see \IteratorAggregate::getIterator()
+     *
      * @return \ArrayIterator
      */
     public function getIterator(): \ArrayIterator

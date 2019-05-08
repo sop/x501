@@ -2,14 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace X501\MatchingRule;
+namespace Sop\X501\MatchingRule;
 
-use X501\StringPrep\StringPreparer;
+use Sop\X501\StringPrep\StringPreparer;
 
 /**
  * Implements 'caseIgnoreMatch' matching rule.
  *
- * @link https://tools.ietf.org/html/rfc4517#section-4.2.11
+ * @see https://tools.ietf.org/html/rfc4517#section-4.2.11
  */
 class CaseIgnoreMatch extends StringPrepMatchingRule
 {

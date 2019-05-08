@@ -2,16 +2,15 @@
 
 declare(strict_types = 1);
 
-namespace X501\ASN1\AttributeValue;
+namespace Sop\X501\ASN1\AttributeValue;
 
-use X501\ASN1\AttributeType;
-use X501\ASN1\AttributeValue\Feature\PrintableStringValue;
+use Sop\X501\ASN1\AttributeType;
+use Sop\X501\ASN1\AttributeValue\Feature\PrintableStringValue;
 
 /**
- * 'serialNumber' attribute value
+ * 'serialNumber' attribute value.
  *
- * @link
- *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2012/SelectedAttributeTypes.html#SelectedAttributeTypes.serialNumber
+ * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2012/SelectedAttributeTypes.html#SelectedAttributeTypes.serialNumber
  */
 class SerialNumberValue extends PrintableStringValue
 {

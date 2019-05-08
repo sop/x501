@@ -2,14 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace X501\MatchingRule;
+namespace Sop\X501\MatchingRule;
 
-use X501\StringPrep\StringPreparer;
+use Sop\X501\StringPrep\StringPreparer;
 
 /**
  * Implements 'caseExactMatch' matching rule.
  *
- * @link https://tools.ietf.org/html/rfc4517#section-4.2.4
+ * @see https://tools.ietf.org/html/rfc4517#section-4.2.4
  */
 class CaseExactMatch extends StringPrepMatchingRule
 {

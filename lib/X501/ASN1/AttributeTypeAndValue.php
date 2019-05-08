@@ -2,33 +2,32 @@
 
 declare(strict_types = 1);
 
-namespace X501\ASN1;
+namespace Sop\X501\ASN1;
 
-use ASN1\Type\Constructed\Sequence;
-use X501\ASN1\AttributeValue\AttributeValue;
-use X501\ASN1\Feature\TypedAttribute;
+use Sop\ASN1\Type\Constructed\Sequence;
+use Sop\X501\ASN1\AttributeValue\AttributeValue;
+use Sop\X501\ASN1\Feature\TypedAttribute;
 
 /**
  * Implements <i>AttributeTypeAndValue</i> ASN.1 type.
  *
- * @link
- *       https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.AttributeTypeAndValue
+ * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.AttributeTypeAndValue
  */
 class AttributeTypeAndValue
 {
     use TypedAttribute;
-    
+
     /**
      * Attribute value.
      *
-     * @var AttributeValue $_value
+     * @var AttributeValue
      */
     protected $_value;
-    
+
     /**
      * Constructor.
      *
-     * @param AttributeType $type Attribute type
+     * @param AttributeType  $type  Attribute type
      * @param AttributeValue $value Attribute value
      */
     public function __construct(AttributeType $type, AttributeValue $value)
@@ -36,11 +35,20 @@ class AttributeTypeAndValue
         $this->_type = $type;
         $this->_value = $value;
     }
-    
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
     /**
      * Initialize from ASN.1.
      *
      * @param Sequence $seq
+     *
      * @return self
      */
     public static function fromASN1(Sequence $seq): self
@@ -49,18 +57,19 @@ class AttributeTypeAndValue
         $value = AttributeValue::fromASN1ByOID($type->oid(), $seq->at(1));
         return new self($type, $value);
     }
-    
+
     /**
      * Convenience method to initialize from attribute value.
      *
      * @param AttributeValue $value Attribute value
+     *
      * @return self
      */
     public static function fromAttributeValue(AttributeValue $value): self
     {
         return new self(new AttributeType($value->oid()), $value);
     }
-    
+
     /**
      * Get attribute value.
      *
@@ -70,7 +79,7 @@ class AttributeTypeAndValue
     {
         return $this->_value;
     }
-    
+
     /**
      * Generate ASN.1 structure.
      *
@@ -80,22 +89,24 @@ class AttributeTypeAndValue
     {
         return new Sequence($this->_type->toASN1(), $this->_value->toASN1());
     }
-    
+
     /**
      * Get attributeTypeAndValue string conforming to RFC 2253.
      *
-     * @link https://tools.ietf.org/html/rfc2253#section-2.3
+     * @see https://tools.ietf.org/html/rfc2253#section-2.3
+     *
      * @return string
      */
     public function toString(): string
     {
-        return $this->_type->typeName() . "=" . $this->_value->rfc2253String();
+        return $this->_type->typeName() . '=' . $this->_value->rfc2253String();
     }
-    
+
     /**
      * Check whether attribute is semantically equal to other.
      *
      * @param AttributeTypeAndValue $other Object to compare to
+     *
      * @return bool
      */
     public function equals(AttributeTypeAndValue $other): bool
@@ -113,14 +124,5 @@ class AttributeTypeAndValue
         }
         // no match or Undefined
         return false;
-    }
-    
-    /**
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->toString();
     }
 }

@@ -2,10 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace X501\ASN1\AttributeValue;
+namespace Sop\X501\ASN1\AttributeValue;
 
-use ASN1\Element;
-use X501\MatchingRule\BinaryMatch;
+use Sop\ASN1\Element;
+use Sop\X501\MatchingRule\BinaryMatch;
+use Sop\X501\MatchingRule\MatchingRule;
 
 /**
  * Class to hold ASN.1 structure of an unimplemented attribute value.
@@ -15,14 +16,14 @@ class UnknownAttributeValue extends AttributeValue
     /**
      * ASN.1 element.
      *
-     * @var Element $_element
+     * @var Element
      */
     protected $_element;
-    
+
     /**
      * Constructor.
      *
-     * @param string $oid
+     * @param string  $oid
      * @param Element $el
      */
     public function __construct(string $oid, Element $el)
@@ -30,52 +31,42 @@ class UnknownAttributeValue extends AttributeValue
         $this->_oid = $oid;
         $this->_element = $el;
     }
-    
+
     /**
-     *
-     * @see \X501\ASN1\AttributeValue\AttributeValue::toASN1()
-     * @return Element
+     * {@inheritdoc}
      */
     public function toASN1(): Element
     {
         return $this->_element;
     }
-    
+
     /**
-     *
-     * @see \X501\ASN1\AttributeValue\AttributeValue::stringValue()
-     * @return string
+     * {@inheritdoc}
      */
     public function stringValue(): string
     {
         // return DER encoding as a hexstring
-        return "#" . bin2hex($this->_element->toDER());
+        return '#' . bin2hex($this->_element->toDER());
     }
-    
+
     /**
-     *
-     * @see \X501\ASN1\AttributeValue\AttributeValue::equalityMatchingRule()
-     * @return BinaryMatch
+     * {@inheritdoc}
      */
-    public function equalityMatchingRule()
+    public function equalityMatchingRule(): MatchingRule
     {
         return new BinaryMatch();
     }
-    
+
     /**
-     *
-     * @see \X501\ASN1\AttributeValue\AttributeValue::rfc2253String()
-     * @return string
+     * {@inheritdoc}
      */
     public function rfc2253String(): string
     {
         return $this->stringValue();
     }
-    
+
     /**
-     *
-     * @see \X501\ASN1\AttributeValue\AttributeValue::_transcodedString()
-     * @return string
+     * {@inheritdoc}
      */
     protected function _transcodedString(): string
     {

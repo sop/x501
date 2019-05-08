@@ -1,12 +1,17 @@
 <?php
 
-use ASN1\Element;
-use X501\StringPrep\StringPreparer;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\ASN1\Element;
+use Sop\X501\StringPrep\StringPreparer;
 
 /**
  * @group string-prep
+ *
+ * @internal
  */
-class StringPreparerTest extends PHPUnit_Framework_TestCase
+class StringPreparerTest extends TestCase
 {
     public function testCreate()
     {
@@ -14,7 +19,7 @@ class StringPreparerTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(StringPreparer::class, $preparer);
         return $preparer;
     }
-    
+
     /**
      * @depends testCreate
      *
@@ -26,7 +31,7 @@ class StringPreparerTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(StringPreparer::class, $preparer);
         return $preparer;
     }
-    
+
     /**
      * @depends testWithCaseFolding
      *
@@ -34,7 +39,7 @@ class StringPreparerTest extends PHPUnit_Framework_TestCase
      */
     public function testPrepare(StringPreparer $preparer)
     {
-        $str = $preparer->prepare("TEST");
-        $this->assertEquals(" test ", $str);
+        $str = $preparer->prepare('TEST');
+        $this->assertEquals(' test ', $str);
     }
 }

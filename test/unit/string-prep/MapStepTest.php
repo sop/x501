@@ -1,11 +1,16 @@
 <?php
 
-use X501\StringPrep\MapStep;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\X501\StringPrep\MapStep;
 
 /**
  * @group string-prep
+ *
+ * @internal
  */
-class MapStepTest extends PHPUnit_Framework_TestCase
+class MapStepTest extends TestCase
 {
     /**
      * @dataProvider provideApplyCaseFold
@@ -18,14 +23,12 @@ class MapStepTest extends PHPUnit_Framework_TestCase
         $step = new MapStep(true);
         $this->assertEquals($expected, $step->apply($string));
     }
-    
+
     public function provideApplyCaseFold()
     {
-        return array(
-            /* @formatter:off */
-            ["abc", "abc"],
-            ["ABC", "abc"],
-            /* @formatter:on */
-        );
+        return [
+            ['abc', 'abc'],
+            ['ABC', 'abc'],
+        ];
     }
 }

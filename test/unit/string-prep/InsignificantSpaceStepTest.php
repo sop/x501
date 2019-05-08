@@ -1,11 +1,16 @@
 <?php
 
-use X501\StringPrep\InsignificantNonSubstringSpaceStep;
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
+use Sop\X501\StringPrep\InsignificantNonSubstringSpaceStep;
 
 /**
  * @group string-prep
+ *
+ * @internal
  */
-class InsignificantSpaceStepTest extends PHPUnit_Framework_TestCase
+class InsignificantSpaceStepTest extends TestCase
 {
     /**
      * @dataProvider provideApplyNonSubstring
@@ -18,22 +23,20 @@ class InsignificantSpaceStepTest extends PHPUnit_Framework_TestCase
         $step = new InsignificantNonSubstringSpaceStep();
         $this->assertEquals($expected, $step->apply($string));
     }
-    
+
     public function provideApplyNonSubstring()
     {
         static $nb_space = "\xc2\xa0";
         static $en_space = "\xe2\x80\x82";
         static $em_space = "\xe2\x80\x83";
-        return array(
-            /* @formatter:off */
-            ["", "  "],
-            [" ", "  "],
-            ["{$nb_space}{$en_space}{$em_space}", "  "],
-            ["abc", " abc "],
-            ["  abc   ", " abc "],
-            ["a bc", " a  bc "],
-            ["a{$nb_space}{$en_space}{$em_space}bc", " a  bc "]
-            /* @formatter:on */
-        );
+        return [
+            ['', '  '],
+            [' ', '  '],
+            ["{$nb_space}{$en_space}{$em_space}", '  '],
+            ['abc', ' abc '],
+            ['  abc   ', ' abc '],
+            ['a bc', ' a  bc '],
+            ["a{$nb_space}{$en_space}{$em_space}bc", ' a  bc '],
+        ];
     }
 }
