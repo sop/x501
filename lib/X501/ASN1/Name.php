@@ -208,9 +208,9 @@ class Name implements \Countable, \IteratorAggregate
     public function countOfType(string $name): int
     {
         $oid = AttributeType::attrNameToOID($name);
-        return array_sum(
+        return (int) array_sum(
             array_map(
-                function (RDN $rdn) use ($oid) {
+                function (RDN $rdn) use ($oid): int {
                     return count($rdn->allOf($oid));
                 }, $this->_rdns));
     }
