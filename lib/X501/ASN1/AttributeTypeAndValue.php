@@ -9,7 +9,7 @@ use Sop\X501\ASN1\AttributeValue\AttributeValue;
 use Sop\X501\ASN1\Feature\TypedAttribute;
 
 /**
- * Implements <i>AttributeTypeAndValue</i> ASN.1 type.
+ * Implements *AttributeTypeAndValue* ASN.1 type.
  *
  * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.AttributeTypeAndValue
  */

@@ -11,7 +11,7 @@ use Sop\ASN1\Type\Primitive\UTF8String;
 use Sop\ASN1\Type\StringType;
 
 /**
- * Implements <i>AttributeType</i> ASN.1 type.
+ * Implements *AttributeType* ASN.1 type.
  *
  * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.AttributeType
  */
@@ -416,7 +416,7 @@ class AttributeType
      *
      * @throws \LogicException
      *
-     * @return \Sop\ASN1\Type\StringType
+     * @return StringType
      */
     public static function asn1StringForType(string $oid, string $str): StringType
     {

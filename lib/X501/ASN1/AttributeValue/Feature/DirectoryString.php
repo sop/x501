@@ -18,8 +18,7 @@ use Sop\X501\MatchingRule\MatchingRule;
 use Sop\X501\StringPrep\TranscodeStep;
 
 /**
- * Base class for attribute values having <i>(Unbounded)DirectoryString</i>
- * as a syntax.
+ * Base class for attribute values having *(Unbounded)DirectoryString* as a syntax.
  *
  * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2012/SelectedAttributeTypes.html#SelectedAttributeTypes.UnboundedDirectoryString
  */
@@ -144,7 +143,7 @@ abstract class DirectoryString extends AttributeValue
     public function rfc2253String(): string
     {
         // TeletexString is encoded as binary
-        if (self::TELETEX == $this->_stringTag) {
+        if (self::TELETEX === $this->_stringTag) {
             return $this->_transcodedString();
         }
         return DNParser::escapeString($this->_transcodedString());
@@ -173,7 +172,7 @@ abstract class DirectoryString extends AttributeValue
         if (!array_key_exists($tag, self::MAP_TAG_TO_CLASS)) {
             throw new \UnexpectedValueException(
                 'Type ' . Element::tagToName($tag) .
-                     ' is not valid DirectoryString.');
+                ' is not valid DirectoryString.');
         }
         return self::MAP_TAG_TO_CLASS[$tag];
     }

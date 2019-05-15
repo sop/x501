@@ -11,10 +11,10 @@ use Sop\X501\ASN1\AttributeValue\AttributeValue;
 use Sop\X501\DN\DNParser;
 
 /**
- * Implements <i>Name</i> ASN.1 type.
+ * Implements *Name* ASN.1 type.
  *
- * Since <i>Name</i> is a CHOICE only supporting <i>RDNSequence</i> type,
- * this class implements <i>RDNSequence</i> semantics as well.
+ * Since *Name* is a CHOICE only supporting *RDNSequence* type,
+ * this class implements *RDNSequence* semantics as well.
  *
  * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.Name
  */
@@ -136,7 +136,7 @@ class Name implements \Countable, \IteratorAggregate
     public function equals(Name $other): bool
     {
         // if RDN count doesn't match
-        if (count($this) != count($other)) {
+        if (count($this) !== count($other)) {
             return false;
         }
         for ($i = count($this) - 1; $i >= 0; --$i) {
@@ -181,7 +181,7 @@ class Name implements \Countable, \IteratorAggregate
             if (count($tvs) > 1) {
                 throw new \RangeException("RDN with multiple {$name} attributes.");
             }
-            if (1 == count($tvs)) {
+            if (1 === count($tvs)) {
                 return $tvs[0]->value();
             }
         }

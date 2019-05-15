@@ -78,8 +78,7 @@ class AttributeTest extends TestCase
      */
     public function testFirst(Attribute $attr)
     {
-        $this->assertEquals('one', $attr->first()
-            ->rfc2253String());
+        $this->assertEquals('one', $attr->first()->rfc2253String());
     }
 
     /**
@@ -89,8 +88,7 @@ class AttributeTest extends TestCase
      */
     public function testValues(Attribute $attr)
     {
-        $this->assertContainsOnlyInstancesOf(AttributeValue::class,
-            $attr->values());
+        $this->assertContainsOnlyInstancesOf(AttributeValue::class, $attr->values());
     }
 
     /**

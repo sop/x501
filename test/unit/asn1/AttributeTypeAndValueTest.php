@@ -65,8 +65,7 @@ class AttributeTypeAndValueTest extends TestCase
      */
     public function testValue(AttributeTypeAndValue $atv)
     {
-        $this->assertEquals('one', $atv->value()
-            ->rfc2253String());
+        $this->assertEquals('one', $atv->value()->rfc2253String());
     }
 
     /**

@@ -9,7 +9,7 @@ use Sop\ASN1\Type\UnspecifiedType;
 use Sop\X501\ASN1\AttributeValue\AttributeValue;
 
 /**
- * Implements <i>RelativeDistinguishedName</i> ASN.1 type.
+ * Implements *RelativeDistinguishedName* ASN.1 type.
  *
  * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.RelativeDistinguishedName
  */
@@ -118,7 +118,7 @@ class RDN implements \Countable, \IteratorAggregate
     public function equals(RDN $other): bool
     {
         // if attribute count doesn't match
-        if (count($this) != count($other)) {
+        if (count($this) !== count($other)) {
             return false;
         }
         $attribs1 = $this->_attribs;
@@ -160,7 +160,7 @@ class RDN implements \Countable, \IteratorAggregate
         $oid = AttributeType::attrNameToOID($name);
         $attribs = array_filter($this->_attribs,
             function (AttributeTypeAndValue $tv) use ($oid) {
-                return $tv->oid() == $oid;
+                return $tv->oid() === $oid;
             });
         return array_values($attribs);
     }

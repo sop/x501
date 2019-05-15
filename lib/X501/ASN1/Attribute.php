@@ -11,7 +11,7 @@ use Sop\X501\ASN1\AttributeValue\AttributeValue;
 use Sop\X501\ASN1\Feature\TypedAttribute;
 
 /**
- * Implements <i>Attribute</i> ASN.1 type.
+ * Implements *Attribute* ASN.1 type.
  *
  * @see https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2012/InformationFramework.html#InformationFramework.Attribute
  */
@@ -37,7 +37,7 @@ class Attribute implements \Countable, \IteratorAggregate
         // check that attribute values have correct oid
         array_walk($values,
             function (AttributeValue $value) use ($type) {
-                if ($value->oid() != $type->oid()) {
+                if ($value->oid() !== $type->oid()) {
                     throw new \LogicException('Attribute OID mismatch.');
                 }
             });
@@ -58,9 +58,7 @@ class Attribute implements \Countable, \IteratorAggregate
         $values = array_map(
             function (UnspecifiedType $el) use ($type) {
                 return AttributeValue::fromASN1ByOID($type->oid(), $el);
-            }, $seq->at(1)
-                ->asSet()
-                ->elements());
+            }, $seq->at(1)->asSet()->elements());
         return new self($type, ...$values);
     }
 
@@ -149,7 +147,7 @@ class Attribute implements \Countable, \IteratorAggregate
         $values = array_map(
             function (AttributeValue $value) use ($cls, $oid) {
                 $value = $cls::fromSelf($value);
-                if ($value->oid() != $oid) {
+                if ($value->oid() !== $oid) {
                     throw new \LogicException('Attribute OID mismatch.');
                 }
                 return $value;

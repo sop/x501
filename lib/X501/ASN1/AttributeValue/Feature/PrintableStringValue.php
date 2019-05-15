@@ -13,7 +13,7 @@ use Sop\X501\MatchingRule\CaseIgnoreMatch;
 use Sop\X501\MatchingRule\MatchingRule;
 
 /**
- * Base class for attribute values having <i>PrintableString</i> syntax.
+ * Base class for attribute values having *PrintableString* syntax.
  */
 abstract class PrintableStringValue extends AttributeValue
 {

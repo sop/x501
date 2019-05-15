@@ -74,9 +74,7 @@ class NameTest extends TestCase
      */
     public function testFirstValueOf(Name $name)
     {
-        $this->assertEquals('two',
-            $name->firstValueOf('name')
-                ->stringValue());
+        $this->assertEquals('two', $name->firstValueOf('name')->stringValue());
     }
 
     /**
