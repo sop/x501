@@ -27,7 +27,7 @@
         "php": ">=7.2",
         "ext-intl": "*",
         "ext-mbstring": "*",
-        "sop/asn1": "dev-php72 as 3.4.0"
+        "sop/asn1": "dev-master as 3.4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.1"
