@@ -35,12 +35,11 @@ class Attribute implements \Countable, \IteratorAggregate
     public function __construct(AttributeType $type, AttributeValue ...$values)
     {
         // check that attribute values have correct oid
-        array_walk($values,
-            function (AttributeValue $value) use ($type) {
-                if ($value->oid() !== $type->oid()) {
-                    throw new \LogicException('Attribute OID mismatch.');
-                }
-            });
+        foreach ($values as $value) {
+            if ($value->oid() !== $type->oid()) {
+                throw new \LogicException('Attribute OID mismatch.');
+            }
+        }
         $this->_type = $type;
         $this->_values = $values;
     }
@@ -138,16 +137,16 @@ class Attribute implements \Countable, \IteratorAggregate
      */
     public function castValues(string $cls): self
     {
-        $refl = new \ReflectionClass($cls);
-        if (!$refl->isSubclassOf(AttributeValue::class)) {
-            throw new \LogicException(
-                "{$cls} must be derived from " . AttributeValue::class . '.');
+        // check that target class derives from AttributeValue
+        if (!is_subclass_of($cls, AttributeValue::class)) {
+            throw new \LogicException(sprintf(
+                '%s must be derived from %s.', $cls, AttributeValue::class));
         }
-        $oid = $this->oid();
         $values = array_map(
-            function (AttributeValue $value) use ($cls, $oid) {
+            function (AttributeValue $value) use ($cls) {
+                /** @var AttributeValue $cls Class name as a string */
                 $value = $cls::fromSelf($value);
-                if ($value->oid() !== $oid) {
+                if ($value->oid() !== $this->oid()) {
                     throw new \LogicException('Attribute OID mismatch.');
                 }
                 return $value;
