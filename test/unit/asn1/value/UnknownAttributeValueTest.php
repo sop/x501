@@ -53,7 +53,7 @@ class UnknownAttributeValueTest extends TestCase
      */
     public function testString(AttributeValue $val)
     {
-        $this->assertEquals('#0c04' . bin2hex('Test'), $val->rfc2253String());
+        $this->assertEquals('Test', $val->rfc2253String());
     }
 
     /**

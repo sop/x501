@@ -16,6 +16,19 @@ use Sop\ASN1\Type\Primitive\T61String;
 class TranscodeStep implements PrepareStep
 {
     /**
+     * Supported ASN.1 types.
+     *
+     * @var array
+     */
+    const SUPPORTED_TYPES = [
+        Element::TYPE_UTF8_STRING,
+        Element::TYPE_PRINTABLE_STRING,
+        Element::TYPE_BMP_STRING,
+        Element::TYPE_UNIVERSAL_STRING,
+        Element::TYPE_T61_STRING,
+    ];
+
+    /**
      * ASN.1 type of the string.
      *
      * @var int
@@ -30,6 +43,18 @@ class TranscodeStep implements PrepareStep
     public function __construct(int $type)
     {
         $this->_type = $type;
+    }
+
+    /**
+     * Check whether transcoding from given ASN.1 type tag is supported.
+     *
+     * @param int $type ASN.1 type tag
+     *
+     * @return bool
+     */
+    public static function isTypeSupported(int $type): bool
+    {
+        return in_array($type, self::SUPPORTED_TYPES);
     }
 
     /**

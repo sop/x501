@@ -108,6 +108,7 @@ abstract class DirectoryString extends AttributeValue
     public static function fromASN1(UnspecifiedType $el): AttributeValue
     {
         $tag = $el->tag();
+        // validate tag
         self::_tagToASN1Class($tag);
         return new static($el->asString()->string(), $tag);
     }
@@ -171,8 +172,8 @@ abstract class DirectoryString extends AttributeValue
     {
         if (!array_key_exists($tag, self::MAP_TAG_TO_CLASS)) {
             throw new \UnexpectedValueException(
-                'Type ' . Element::tagToName($tag) .
-                ' is not valid DirectoryString.');
+                sprintf('Type %s is not valid DirectoryString.',
+                    Element::tagToName($tag)));
         }
         return self::MAP_TAG_TO_CLASS[$tag];
     }
