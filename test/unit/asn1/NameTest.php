@@ -85,12 +85,14 @@ class NameTest extends TestCase
     public function testFirstValueOfNotFound(Name $name)
     {
         $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Attribute cn not found');
         $name->firstValueOf('cn');
     }
 
     public function testFirstValueOfMultipleFail()
     {
         $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('RDN with multiple name attributes');
         Name::fromString('name=one+name=two')->firstValueOf('name');
     }
 

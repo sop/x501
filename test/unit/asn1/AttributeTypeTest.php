@@ -86,6 +86,7 @@ class AttributeTypeTest extends TestCase
     public function testNameToOIDFail()
     {
         $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage('No OID for unknown');
         AttributeType::attrNameToOID('unknown');
     }
 }

@@ -21,6 +21,7 @@ class AttributeValueTest extends TestCase
     public function testFromASN1BadCall()
     {
         $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('must be implemented in a concrete class');
         AttributeValue::fromASN1(new UnspecifiedType(new NullType()));
     }
 

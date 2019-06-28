@@ -20,6 +20,7 @@ class DirectoryStringTest extends TestCase
     public function testFromASN1InvalidType()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Type NULL is not valid DirectoryString');
         DirectoryString::fromASN1(new UnspecifiedType(new NullType()));
     }
 
@@ -27,6 +28,7 @@ class DirectoryStringTest extends TestCase
     {
         $value = new CommonNameValue('name', Element::TYPE_NULL);
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Type NULL is not valid DirectoryString');
         $value->toASN1();
     }
 

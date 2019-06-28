@@ -54,6 +54,7 @@ class TranscodeStepTest extends TestCase
     {
         $step = new TranscodeStep(Element::TYPE_BOOLEAN);
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Unsupported string type BOOLEAN');
         $step->apply('TEST');
     }
 }

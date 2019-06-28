@@ -103,9 +103,9 @@ class DNParser
         $name = $this->_parseName($offset);
         if ($offset < $this->_len) {
             $remains = substr($this->_dn, $offset);
-            throw new \UnexpectedValueException(
-                'Parser finished before the end of string' .
-                     ", remaining: '{$remains}'.");
+            throw new \UnexpectedValueException(sprintf(
+                'Parser finished before the end of string, remaining: %s',
+                $remains));
         }
         return $name;
     }

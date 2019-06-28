@@ -118,6 +118,7 @@ class AttributeTest extends TestCase
     public function testCreateMismatch()
     {
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Attribute OID mismatch');
         Attribute::fromAttributeValues(new NameValue('name'),
             new CommonNameValue('cn'));
     }
@@ -125,6 +126,7 @@ class AttributeTest extends TestCase
     public function testEmptyFromValuesFail()
     {
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('No values');
         Attribute::fromAttributeValues();
     }
 
@@ -143,6 +145,7 @@ class AttributeTest extends TestCase
     public function testEmptyFirstFail(Attribute $attr)
     {
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Attribute contains no values');
         $attr->first();
     }
 }

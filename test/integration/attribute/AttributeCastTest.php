@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Sop\ASN1\Type\Primitive\UTF8String;
 use Sop\X501\ASN1\Attribute;
 use Sop\X501\ASN1\AttributeType;
+use Sop\X501\ASN1\AttributeValue\AttributeValue;
 use Sop\X501\ASN1\AttributeValue\CommonNameValue;
 use Sop\X501\ASN1\AttributeValue\DescriptionValue;
 use Sop\X501\ASN1\AttributeValue\UnknownAttributeValue;
@@ -41,12 +42,15 @@ class AttributeCastTest extends TestCase
     public function testInvalidClass()
     {
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage(
+            stdClass::class . ' must be derived from ' . AttributeValue::class);
         self::$_attr->castValues(stdClass::class);
     }
 
     public function testOIDMismatch()
     {
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Attribute OID mismatch');
         self::$_attr->castValues(DescriptionValue::class);
     }
 }

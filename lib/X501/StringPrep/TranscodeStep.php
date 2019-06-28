@@ -85,7 +85,7 @@ class TranscodeStep implements PrepareStep
                 $el = new T61String($string);
                 return '#' . bin2hex($el->toDER());
         }
-        throw new \LogicException(
-            'Unsupported string type ' . Element::tagToName($this->_type) . '.');
+        throw new \LogicException(sprintf('Unsupported string type %s.',
+            Element::tagToName($this->_type)));
     }
 }

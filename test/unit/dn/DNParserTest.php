@@ -168,54 +168,63 @@ class DNParserTest extends TestCase
     public function testUnexpectedNameEnd()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Parser finished before the end of string');
         DNParser::parseString('cn=#05000');
     }
 
     public function testInvalidTypeAndValuePair()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Invalid type and value pair');
         DNParser::parseString('cn');
     }
 
     public function testInvalidAttributeType()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Invalid attribute type');
         DNParser::parseString('#00=fail');
     }
 
     public function testUnexpectedQuotation()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unexpected quotation');
         DNParser::parseString('cn=fa"il');
     }
 
     public function testInvalidHexString()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Invalid hexstring');
         DNParser::parseString('cn=#.');
     }
 
     public function testInvalidHexDER()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Invalid DER encoding from hexstring');
         DNParser::parseString('cn=#badcafee');
     }
 
     public function testUnexpectedPairEnd()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unexpected end of escape sequence');
         DNParser::parseString('cn=\\');
     }
 
     public function testUnexpectedHexPairEnd()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unexpected end of hexpair');
         DNParser::parseString('cn=\\f');
     }
 
     public function testInvalidHexPair()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Invalid hexpair');
         DNParser::parseString('cn=\\xx');
     }
 }
